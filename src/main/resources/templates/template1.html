@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8" />
+    <title>Homepage</title>
+    <link rel=icon href=favicon.png>
+</head>
+<body>
+<h1 th:text="{username}">Ciao</h1>
+<form action="${pageContext.request.contextPath}/login-servlet" method="post">
+    Username
+    <input type="text" maxlength="20" required name="email"><br><br>
+    Password
+    <input type="password" maxlength="20" required name="password"><br><br>
+    <input type="submit" value="Invia"></form>
+</body>
+</html>

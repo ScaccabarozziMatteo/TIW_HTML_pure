@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <title>CompraMI</title>
+</head>
+<body>
+<h1>Benvenuto sul nostro sito di compravendita</h1>
+<h4>Che tipo di utente sei?</h4>
+
+<a href="login-servlet" >Acquirente</a><br>
+<a href="/link.html" >Venditore</a>
+
+<p>Acquirente</p>
+<form th:insert="formLogin"  method="post">
+    Username
+    <input type="text" maxlength="20" required name="email"><br><br>
+    Password
+    <input type="password" maxlength="20" required name="password"><br><br>
+    <input type="submit" value="Invia"></form>
+
+<p>Venditore</p>
+<form th:insert="formLogin" method="post"></form>
+</body>
+</html>
