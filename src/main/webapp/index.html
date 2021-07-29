@@ -1,19 +1,16 @@
 <!DOCTYPE html>
-<html lang="it" xmlns:th="http://www.thymeleaf.org/">
-<head>
-    <meta charset="UTF-8">
-    <title>CompraMI</title>
-</head>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head th:insert="WEB-INF/templates/Footer :: head"></head>
 <body>
-<div th:insert="~{header::header}"></div>
+<header th:insert="WEB-INF/templates/Footer :: header"></header>
 <h1>Benvenut* sul nostro sito di compravendita</h1>
 <h4>Che tipo di utente sei?</h4>
 
 <a href="login-servlet" >Acquirente</a><br>
-<a href="/link.html" >Venditore</a>
+<a href="link.html" >Venditore</a>
 
 <p>Acquirente</p>
-<form th:insert="formLogin"  method="post">
+<form method="POST" action="login-servlet">
     Username
     <input type="text" maxlength="20" required name="email"><br><br>
     Password
@@ -21,6 +18,6 @@
     <input type="submit" value="Invia"></form>
 
 <p>Venditore</p>
-<form th:insert="formLogin" method="post"></form>
+
 </body>
 </html>

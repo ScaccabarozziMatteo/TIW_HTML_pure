@@ -9,7 +9,7 @@ import javax.servlet.UnavailableException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
-@WebServlet(name = "login", value = "/login-servlet")
+@WebServlet(name = "login", urlPatterns = "/login-servlet")
 public class LoginServlet extends HttpServlet {
 
     private Connection connection = null;
@@ -18,7 +18,6 @@ public class LoginServlet extends HttpServlet {
     public void init() throws ServletException {
 
         try {
-
             ServletContext context = getServletContext();
             String driver = context.getInitParameter("dbDriver");
             String url = context.getInitParameter("dbUrl");
@@ -44,24 +43,27 @@ public class LoginServlet extends HttpServlet {
         email = request.getParameter("email");
         password = request.getParameter("password");
 
-        String query = "SELECT email, password FROM dbtest.users";
+        String query = "SELECT email, password FROM dbtest.accounts";
         ResultSet result = null;
         PreparedStatement pstatement = null;
         response.setContentType("text/plain");
         PrintWriter out = response.getWriter();
-        Cookie c1 = new Cookie("email", email);//the username and password are //encrypted
-        Cookie c2 = new Cookie("password", password);
-        c1.setMaxAge(20000);
-        c2.setMaxAge(20000);
-        response.addCookie(c1);
-        response.addCookie(c2);//sends cookies to the browser
 
         try {
             pstatement = connection.prepareStatement(query);
             result = pstatement.executeQuery();
             while (result.next()) {
                 if(email.equals(result.getString("email")) && password.equals(result.getString("password"))) {
-                    response.sendRedirect("AreaPersonale.html");
+                    Cookie c1 = new Cookie("email", email);     //the username and password are encrypted
+                    Cookie c2 = new Cookie("password", password);
+                    c1.setMaxAge(20000);
+                    c2.setMaxAge(20000);
+                    response.addCookie(c1);
+                    response.addCookie(c2); //sends cookies to the browser
+                    response.sendRedirect("link.html");
+                }
+                else {
+                    response.sendRedirect("index.html");
                 }
             }
 
