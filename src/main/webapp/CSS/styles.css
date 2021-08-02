@@ -4,6 +4,9 @@
 .column{
     float: left;
     width: 50%;
-    height: 100px;
+    height: available;
     background-color: aquamarine;
+}
+.error {
+    color: red;
 }

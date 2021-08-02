@@ -1,5 +1,10 @@
 package it.polimi.tiw.progetto1;
 
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.WebContext;
+import org.thymeleaf.templatemode.TemplateMode;
+import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
+
 import java.io.*;
 import java.sql.*;
 import javax.servlet.ServletContext;
@@ -8,10 +13,11 @@ import javax.servlet.UnavailableException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
-@WebServlet(name = "login", urlPatterns = "/login-servlet")
+@WebServlet(name = "login", urlPatterns = "/login")
 public class LoginServlet extends HttpServlet {
 
     private Connection connection = null;
+    private TemplateEngine templateEngine;
 
     @Override
     public void init() throws ServletException {
@@ -31,11 +37,17 @@ public class LoginServlet extends HttpServlet {
             throw new UnavailableException("Impossibile connettersi");
         }
 
+        ServletContext servletContext = getServletContext();
+        ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver(servletContext);
+        templateResolver.setTemplateMode(TemplateMode.HTML);
+        templateResolver.setSuffix(".html");
+        this.templateEngine = new TemplateEngine();
+        this.templateEngine.setTemplateResolver(templateResolver);
 
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
+        throws IOException {
         HttpSession session = request.getSession();
 
         String email, password;
@@ -45,8 +57,6 @@ public class LoginServlet extends HttpServlet {
         String query = "SELECT email, password FROM dbtest.accounts";
         ResultSet result = null;
         PreparedStatement pstatement = null;
-        response.setContentType("text/plain");
-        PrintWriter out = response.getWriter();
 
 
         try {
@@ -63,23 +73,36 @@ public class LoginServlet extends HttpServlet {
                     response.addCookie(c2); //sends cookies to the browser
                     response.sendRedirect("PersonalArea");
                 }
-                else {
+                else if (email.equals("") || password.equals("")) {
+                    ServletContext servletContext = getServletContext();
+                    WebContext webContext = new WebContext(request, response, servletContext, request.getLocale());
+                    webContext.setVariable("errorNoCredential", "Credenziali non valide!");
+                    templateEngine.process("/index", webContext, response.getWriter());
+
                     //errors.rejectValue("onStock", "Book out of stock. Come later...");
                   //  redirectAttributes.addFlashAttribute("errorMessage", "We couldn't process your order!");
-
-                    response.sendRedirect("index.html");
+                }
+                else {
+                    ServletContext servletContext = getServletContext();
+                    WebContext webContext = new WebContext(request, response, servletContext, request.getLocale());
+                    webContext.setVariable("errorLogin", "Credenziali errate o account non esistente!");
+                    templateEngine.process("/index", webContext, response.getWriter());
                 }
             }
 
-            out.println("Username o password errate");
+            //out.println("Username o password errate");
 
-        } catch (SQLException e) { out.append("SQL ERROR1");}
+        } catch (SQLException e) {
+            response.sendError(404);
+        }
 
         finally {
-            try {result.close();
-            } catch (Exception e1) {out.append("SQL RES ERROR2");}
-            try {pstatement.close();
-            } catch (Exception e1) {out.append("SQL STMT ERROR3");
+            try {
+                assert result != null;
+                result.close();
+                pstatement.close();
+            } catch (Exception e1) {
+                response.sendError(404);
             }
         }
 

@@ -16,7 +16,7 @@
 
 <div class="login_body">
     <div class="column">
-        <form method="POST" action="login-servlet">
+        <form method="POST" action="login">
             Username
             <label>
                 <input type="text" maxlength="20" required name="email">
@@ -25,27 +25,32 @@
             <label>
                 <input type="password" maxlength="20" required name="password">
             </label><br><br>
+            <div class = "error" th:text="${errorLogin}"></div>
+            <div class = "error" th:text="${errorNoCredential}"></div>
             <input type="submit" value="Invia">
         </form>
+
     </div>
     <div class="column">
-        <form method="POST" action="login-servlet">
+        <form method="POST" action="login">
             Username
             <label>
                 <input type="text" maxlength="20" required name="email">
             </label><br><br>
             Password
             <label>
-                <input type="password" maxlength="20" required name="password" th:field="*{email}">
+                <input type="password" maxlength="20" required name="password">
             </label><br><br>
-            <div th:if="${errorMessage}">
-                <div th:text="${errorMessage}"></div>
-            </div>
+            <div class="error" th:if="${errorNoCredential}"></div>
+            <div class="error" th:text="${errorLogin}"></div>
+
             <input type="submit" value="Invia"></form>
     </div>
 </div>
 
-<footer th:insert="templates/template1 :: footer"></footer>
+<div>
+    <footer th:insert="templates/template1 :: footer"></footer>
+</div>
 
 </body>
 </html>
