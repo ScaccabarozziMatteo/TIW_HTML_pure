@@ -9,7 +9,10 @@
   <body>
 
   <div th:fragment="header">
-      Ciao sono l'HEADER! :)
+      <nav>
+          <a th:href="@{index.html}">Home</a>
+          <a href="/contatti">Contatti</a>
+      </nav>
   </div>
 
   <div th:fragment="footer">

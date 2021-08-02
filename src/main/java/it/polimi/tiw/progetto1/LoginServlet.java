@@ -79,8 +79,6 @@ public class LoginServlet extends HttpServlet {
                     webContext.setVariable("errorNoCredential", "Credenziali non valide!");
                     templateEngine.process("/index", webContext, response.getWriter());
 
-                    //errors.rejectValue("onStock", "Book out of stock. Come later...");
-                  //  redirectAttributes.addFlashAttribute("errorMessage", "We couldn't process your order!");
                 }
                 else {
                     ServletContext servletContext = getServletContext();
@@ -89,8 +87,6 @@ public class LoginServlet extends HttpServlet {
                     templateEngine.process("/index", webContext, response.getWriter());
                 }
             }
-
-            //out.println("Username o password errate");
 
         } catch (SQLException e) {
             response.sendError(404);
