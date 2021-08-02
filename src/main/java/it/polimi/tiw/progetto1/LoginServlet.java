@@ -2,7 +2,6 @@ package it.polimi.tiw.progetto1;
 
 import java.io.*;
 import java.sql.*;
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.UnavailableException;
@@ -37,7 +36,7 @@ public class LoginServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
-        HttpSession session = request.getSession(true);
+        HttpSession session = request.getSession();
 
         String email, password;
         email = request.getParameter("email");
@@ -49,6 +48,7 @@ public class LoginServlet extends HttpServlet {
         response.setContentType("text/plain");
         PrintWriter out = response.getWriter();
 
+
         try {
             pstatement = connection.prepareStatement(query);
             result = pstatement.executeQuery();
@@ -58,11 +58,15 @@ public class LoginServlet extends HttpServlet {
                     Cookie c2 = new Cookie("password", password);
                     c1.setMaxAge(20000);
                     c2.setMaxAge(20000);
+                    session.setAttribute("login", email);
                     response.addCookie(c1);
                     response.addCookie(c2); //sends cookies to the browser
-                    response.sendRedirect("link.html");
+                    response.sendRedirect("PersonalArea");
                 }
                 else {
+                    errors.rejectValue("onStock", "Book out of stock. Come later...");
+                    redirectAttributes.addFlashAttribute("errorMessage", "We couldn't process your order!");
+
                     response.sendRedirect("index.html");
                 }
             }

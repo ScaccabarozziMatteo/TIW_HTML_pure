@@ -1,23 +1,51 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
-<head th:insert="WEB-INF/templates/Footer :: head"></head>
+<head>
+    <meta charset="UTF-8">
+    <title>CompraMI</title>
+    <link rel="icon" href="templates/favicon.ico" type="image/x-icon"/>
+    <link rel="shortcut icon" href="templates/favicon.ico" type="image/x-icon"/>
+    <link rel="stylesheet" type="text/css" href="CSS/styles.css">
+</head>
+
 <body>
-<header th:insert="WEB-INF/templates/Footer :: header"></header>
+<header th:insert="templates/template1 :: header">
+</header>
 <h1>Benvenut* sul nostro sito di compravendita</h1>
 <h4>Che tipo di utente sei?</h4>
 
-<a href="login-servlet" >Acquirente</a><br>
-<a href="link.html" >Venditore</a>
+<div class="login_body">
+    <div class="column">
+        <form method="POST" action="login-servlet">
+            Username
+            <label>
+                <input type="text" maxlength="20" required name="email">
+            </label><br><br>
+            Password
+            <label>
+                <input type="password" maxlength="20" required name="password">
+            </label><br><br>
+            <input type="submit" value="Invia">
+        </form>
+    </div>
+    <div class="column">
+        <form method="POST" action="login-servlet">
+            Username
+            <label>
+                <input type="text" maxlength="20" required name="email">
+            </label><br><br>
+            Password
+            <label>
+                <input type="password" maxlength="20" required name="password" th:field="*{email}">
+            </label><br><br>
+            <div th:if="${errorMessage}">
+                <div th:text="${errorMessage}"></div>
+            </div>
+            <input type="submit" value="Invia"></form>
+    </div>
+</div>
 
-<p>Acquirente</p>
-<form method="POST" action="login-servlet">
-    Username
-    <input type="text" maxlength="20" required name="email"><br><br>
-    Password
-    <input type="password" maxlength="20" required name="password"><br><br>
-    <input type="submit" value="Invia"></form>
-
-<p>Venditore</p>
+<footer th:insert="templates/template1 :: footer"></footer>
 
 </body>
 </html>

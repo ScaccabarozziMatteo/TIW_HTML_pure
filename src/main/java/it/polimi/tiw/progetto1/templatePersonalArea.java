@@ -11,6 +11,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
     @WebServlet(name = "personalArea", urlPatterns = "/PersonalArea")
@@ -28,10 +29,20 @@ import java.io.IOException;
             this.templateEngine.setTemplateResolver(templateResolver);
         }
 
+
         protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-            String path = "/WEB-INF/AreaPersonale";
-            ServletContext servletContext = getServletContext();
-            final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-            templateEngine.process(path, ctx, response.getWriter());
+
+            HttpSession session = request.getSession();
+            String strLogin = (String) session.getAttribute("login");
+            if (strLogin != null) {
+
+                String path = "/WEB-INF/AreaPersonale";
+                ServletContext servletContext = getServletContext();
+                final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+                templateEngine.process(path, ctx, response.getWriter());
+            }
+            else {
+                response.sendRedirect("index.html");
+            }
         }
     }

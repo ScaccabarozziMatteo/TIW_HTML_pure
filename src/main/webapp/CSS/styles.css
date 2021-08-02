@@ -1,0 +1,9 @@
+.login_body{
+    width: 100%;
+}
+.column{
+    float: left;
+    width: 50%;
+    height: 100px;
+    background-color: aquamarine;
+}
