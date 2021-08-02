@@ -64,8 +64,8 @@ public class LoginServlet extends HttpServlet {
                     response.sendRedirect("PersonalArea");
                 }
                 else {
-                    errors.rejectValue("onStock", "Book out of stock. Come later...");
-                    redirectAttributes.addFlashAttribute("errorMessage", "We couldn't process your order!");
+                    //errors.rejectValue("onStock", "Book out of stock. Come later...");
+                  //  redirectAttributes.addFlashAttribute("errorMessage", "We couldn't process your order!");
 
                     response.sendRedirect("index.html");
                 }
