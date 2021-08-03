@@ -11,12 +11,12 @@
 <body>
 <header th:insert="templates/template1 :: header">
 </header>
-<h1>Benvenut* sul nostro sito di compravendita</h1>
-<h4>Che tipo di utente sei?</h4>
+<h1 class="titleIndex">Benvenut* sul nostro sito di compravendita</h1>
 
 <div class="login_body">
     <div class="column">
-        <form method="POST" action="login">
+        <h2 style="text-align: center">Accesso per i clienti</h2>
+        <form class="formLogin" method="POST" action="login">
             Username
             <label>
                 <input type="text" maxlength="20" required name="emailCustomer">
@@ -32,7 +32,8 @@
 
     </div>
     <div class="column">
-        <form method="POST" action="login">
+        <h2 style="text-align: center">Accesso per i venditori</h2>
+        <form class="formLogin" method="POST" action="login">
             Username
             <label>
                 <input type="text" maxlength="20" required name="emailSupplier">
@@ -49,7 +50,6 @@
 </div>
 
 <footer th:insert="templates/template1 :: footer"></footer>
-
 
 </body>
 </html>

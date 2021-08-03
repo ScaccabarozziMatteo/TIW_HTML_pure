@@ -1,17 +1,16 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-<div th:fragment="head">
-    <meta charset="UTF-8">
-    <title>CompraMI</title>
-    <link rel="icon" href="favicon.ico" type="image/x-icon"/>
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
-</div>
   <body>
 
   <div th:fragment="header">
-      <nav>
-          <a th:href="@{index.html}">Home</a>
-          <a href="/contatti">Contatti</a>
+      <nav class="navigation-bar">
+              <a th:href="@{index.html}">
+                  <img class="logo" th:src="@{templates/logo.png}" alt="logo">
+              </a>
+          <ul>
+              <li><a th:href="@{index.html}">Home</a></li>
+              <li><a href="#">Contatti</a></li>
+          </ul>
       </nav>
   </div>
 
