@@ -8,7 +8,10 @@
     <link rel="stylesheet" type="text/css" th:href="@{./CSS/styles.css}">
 </head>
 <body>
-<h1>Benvenuto <span th:text="|${name}|"></span></h1>
+<header th:insert="templates/template1 :: header"></header>
 
+<h2>Inserisci tutti i tuoi dati nel form:</h2>
+
+<footer th:insert="templates/template1 :: footer"></footer>
 </body>
 </html>

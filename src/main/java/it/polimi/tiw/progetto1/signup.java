@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
 
-@WebServlet(name = "signup", value = "/signup-servlet")
+@WebServlet(name = "signupServlet", value = "/signupServlet")
 public class signup extends HttpServlet {
 
     private Connection connection = null;

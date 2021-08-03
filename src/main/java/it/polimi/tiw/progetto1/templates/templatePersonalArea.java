@@ -1,4 +1,4 @@
-package it.polimi.tiw.progetto1;
+package it.polimi.tiw.progetto1.templates;
 
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;

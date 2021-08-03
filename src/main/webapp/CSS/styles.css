@@ -24,11 +24,12 @@
     background-color: #EDF2F5;
     height: 70px;
     width: 100%;
-    text-align:center;
+    text-align:left;
     border-radius: 20px;
 }
 .navigation-bar img{
     float:left;
+    align-items: center;
 }
 .navigation-bar ul {
     padding: 0px;
@@ -86,6 +87,13 @@ footer {
 .formLogin {
     text-align: center;
 }
-link {
 
+a, a:visited {
+    color: dodgerblue;
+}
+
+a:hover {
+    color: midnightblue;
+    background-color: powderblue;
+    text-decoration: underline;
 }
