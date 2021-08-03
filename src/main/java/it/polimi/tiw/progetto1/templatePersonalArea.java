@@ -53,7 +53,7 @@ import java.sql.*;
             if (strLogin != null) {
                     String name = null;
 
-                    String query = "SELECT name FROM dbtest.accounts WHERE email LIKE '" + strLogin + "'";
+                    String query = "SELECT name FROM dbtest.customers WHERE email LIKE '" + strLogin + "'";
                     ResultSet result = null;
                     PreparedStatement pstatement = null;
 

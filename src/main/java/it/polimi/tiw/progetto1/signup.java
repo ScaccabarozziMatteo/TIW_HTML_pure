@@ -48,7 +48,7 @@ public class signup extends HttpServlet {
         password = request.getParameter("password");
 
         String catalog = request.getParameter("catalog"); // nullity test omitted..
-        String query = "INSERT INTO dbtest.users VALUES ('name', 'password');";
+        String query = "INSERT INTO dbtest.customers VALUES ('name', 'password');";
         ResultSet result = null;
         PreparedStatement pstatement = null;
         response.setContentType("text/plain");

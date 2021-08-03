@@ -50,58 +50,84 @@ public class LoginServlet extends HttpServlet {
         throws IOException {
         HttpSession session = request.getSession();
 
-        String email, password;
-        email = request.getParameter("email");
-        password = request.getParameter("password");
+        String emailCustomer, passwordCustomer, emailSupplier, passwordSupplier;
+        emailCustomer = request.getParameter("emailCustomer");
+        passwordCustomer = request.getParameter("passwordCustomer");
+        emailSupplier = request.getParameter("emailSupplier");
+        passwordSupplier = request.getParameter("passwordSupplier");
 
-        String query = "SELECT email, password FROM dbtest.accounts";
-        ResultSet result = null;
-        PreparedStatement pstatement = null;
+        String query1 = "SELECT email, password FROM dbtest.customers";
+        String query2 = "SELECT email, password FROM dbtest.suppliers";
+        ResultSet result1 = null, result2 = null;
+        PreparedStatement pstatement1 = null, pstatement2 = null;
 
 
         try {
-            pstatement = connection.prepareStatement(query);
-            result = pstatement.executeQuery();
-            while (result.next()) {
-                if(email.equals(result.getString("email")) && password.equals(result.getString("password"))) {
-                    Cookie c1 = new Cookie("email", email);     //the username and password are encrypted
-                    Cookie c2 = new Cookie("password", password);
-                    c1.setMaxAge(20000);
-                    c2.setMaxAge(20000);
-                    session.setAttribute("login", email);
-                    response.addCookie(c1);
-                    response.addCookie(c2); //sends cookies to the browser
-                    response.sendRedirect("PersonalArea");
-                }
-                else if (email.equals("") || password.equals("")) {
-                    ServletContext servletContext = getServletContext();
-                    WebContext webContext = new WebContext(request, response, servletContext, request.getLocale());
-                    webContext.setVariable("errorNoCredential", "Credenziali non valide!");
-                    templateEngine.process("/index", webContext, response.getWriter());
-
-                }
-                else {
-                    ServletContext servletContext = getServletContext();
-                    WebContext webContext = new WebContext(request, response, servletContext, request.getLocale());
-                    webContext.setVariable("errorLogin", "Credenziali errate o account non esistente!");
-                    templateEngine.process("/index", webContext, response.getWriter());
+            if (emailCustomer != null && !emailCustomer.equals("") || passwordCustomer != null && !passwordCustomer.equals("")) {
+                pstatement1 = connection.prepareStatement(query1);
+                result1 = pstatement1.executeQuery();
+                while (result1.next()) {
+                    if (emailCustomer.equals(result1.getString("email")) && passwordCustomer.equals(result1.getString("password"))) {
+                        Cookie c1 = new Cookie("email", emailCustomer);     //the username and password are encrypted
+                        Cookie c2 = new Cookie("password", passwordCustomer);
+                        c1.setMaxAge(20000);
+                        c2.setMaxAge(20000);
+                        session.setAttribute("login", emailCustomer);
+                        response.addCookie(c1);
+                        response.addCookie(c2); //sends cookies to the browser
+                        response.sendRedirect("PersonalArea");
+                    }
+                    else {
+                        ServletContext servletContext = getServletContext();
+                        WebContext webContext = new WebContext(request, response, servletContext, request.getLocale());
+                        webContext.setVariable("errorLoginCustomer", "Credenziali errate o account non esistente!");
+                        templateEngine.process("/index", webContext, response.getWriter());
+                    }
                 }
             }
+            else if (emailSupplier != null && !emailSupplier.equals("")) {
+                pstatement2 = connection.prepareStatement(query2);
+                result2 = pstatement2.executeQuery();
+                while (result2.next()) {
+                    if (emailSupplier.equals(result2.getString("email")) && emailSupplier.equals(result2.getString("password"))) {
+                        Cookie c1 = new Cookie("email", emailSupplier);     //the username and password are encrypted
+                        Cookie c2 = new Cookie("password", passwordSupplier);
+                        c1.setMaxAge(20000);
+                        c2.setMaxAge(20000);
+                        session.setAttribute("login", emailSupplier);
+                        response.addCookie(c1);
+                        response.addCookie(c2); //sends cookies to the browser
+                        response.sendRedirect("PersonalArea");
+                    }
+                    else {
+                        ServletContext servletContext = getServletContext();
+                        WebContext webContext = new WebContext(request, response, servletContext, request.getLocale());
+                        webContext.setVariable("errorLoginSupplier", "Credenziali errate o account non esistente!");
+                        templateEngine.process("/index", webContext, response.getWriter());
+                    }
+                }
+            }
+            else if (emailCustomer == null || passwordCustomer == null && emailSupplier == null || passwordSupplier == null) {
+                ServletContext servletContext = getServletContext();
+                WebContext webContext = new WebContext(request, response, servletContext, request.getLocale());
+                webContext.setVariable("errorNoCredential", "Credenziali non valide!");
+                templateEngine.process("/index", webContext, response.getWriter());
 
+            }
         } catch (SQLException e) {
             response.sendError(404);
-        }
-
-        finally {
+        } finally {
             try {
-                assert result != null;
-                result.close();
-                pstatement.close();
+                assert result1 != null;
+                result1.close();
+                assert result2 != null;
+                result2.close();
+                pstatement1.close();
+                pstatement2.close();
             } catch (Exception e1) {
-                response.sendError(404);
+                System.out.println("Errore chiusura connessioni con il DB");
             }
         }
-
     }
 
     public void destroy() {

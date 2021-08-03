@@ -19,13 +19,13 @@
         <form method="POST" action="login">
             Username
             <label>
-                <input type="text" maxlength="20" required name="email">
+                <input type="text" maxlength="20" required name="emailCustomer">
             </label><br><br>
             Password
             <label>
-                <input type="password" maxlength="20" required name="password">
+                <input type="password" maxlength="20" required name="passwordCustomer">
             </label><br><br>
-            <div class = "error" th:text="${errorLogin}"></div>
+            <div class = "error" th:text="${errorLoginCustomer}"></div>
             <div class = "error" th:text="${errorNoCredential}"></div>
             <input type="submit" value="Invia">
         </form>
@@ -35,22 +35,21 @@
         <form method="POST" action="login">
             Username
             <label>
-                <input type="text" maxlength="20" required name="email">
+                <input type="text" maxlength="20" required name="emailSupplier">
             </label><br><br>
             Password
             <label>
-                <input type="password" maxlength="20" required name="password">
+                <input type="password" maxlength="20" required name="passwordSupplier">
             </label><br><br>
-            <div class="error" th:if="${errorNoCredential}"></div>
-            <div class="error" th:text="${errorLogin}"></div>
+            <div class="error" th:text="${errorLoginSupplier}"></div>
+            <div class="error" th:text="${errorNoCredential}"></div>
 
             <input type="submit" value="Invia"></form>
     </div>
 </div>
 
-<div>
-    <footer th:insert="templates/template1 :: footer"></footer>
-</div>
+<footer th:insert="templates/template1 :: footer"></footer>
+
 
 </body>
 </html>

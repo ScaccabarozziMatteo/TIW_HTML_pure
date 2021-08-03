@@ -4,7 +4,7 @@
 .column{
     float: left;
     width: 50%;
-    height: available;
+    height: 90%;
     background-color: aquamarine;
 }
 .error {
