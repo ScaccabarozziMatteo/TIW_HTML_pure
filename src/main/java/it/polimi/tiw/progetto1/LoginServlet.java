@@ -88,10 +88,8 @@ public class LoginServlet extends HttpServlet {
                     }
                     else {
                         ServletContext servletContext = getServletContext();
-                        session.invalidate();
-                        WebContext webContext = new WebContext(request, response, servletContext, request.getLocale());
-                        webContext.setVariable("errorLoginCustomer", "Credenziali errate o account non esistente!");
-                        templateEngine.process("/index", webContext, response.getWriter());
+                        servletContext.setAttribute("errorLoginCustomer", "Credenziali errate o account non esistente!");
+                        response.sendRedirect("index.html");
                     }
                 } catch (SQLException e) {
                     e.printStackTrace();
@@ -124,19 +122,15 @@ public class LoginServlet extends HttpServlet {
                     }
                     else {
                         ServletContext servletContext = getServletContext();
-                        session.invalidate();
-                        WebContext webContext = new WebContext(request, response, servletContext, request.getLocale());
-                        webContext.setVariable("errorLoginSupplier", "Credenziali errate o account non esistente!");
-                        templateEngine.process("/index", webContext, response.getWriter());
+                        servletContext.setAttribute("errorLoginSupplier", "Credenziali errate o account non esistente!");
+                        response.sendRedirect("index.html");
                     }
                 }
             }
             else if (emailCustomer == null || passwordCustomer == null && codeSupplier == null || passwordSupplier == null) {
                 ServletContext servletContext = getServletContext();
-                session.invalidate();
-                WebContext webContext = new WebContext(request, response, servletContext, request.getLocale());
-                webContext.setVariable("errorNoCredential", "Credenziali non valide!");
-                templateEngine.process("/index", webContext, response.getWriter());
+                servletContext.setAttribute("errorNoCredential", "Credenziali non valide!");
+                response.sendRedirect("index.html");
             }
     }
 

@@ -8,13 +8,14 @@ public class Supplier implements Serializable {
     private String code;
     private String name;
     private String password;
-    private String evaluation;
+    private int evaluation;
 
 
-    public Supplier(String code, String name, String password) {
+    public Supplier(String code, String name, String password, int evaluation) {
         this.code = code;
         this.name = name;
         this.password = password;
+        this.evaluation = evaluation;
     }
 
     public String getCode() {

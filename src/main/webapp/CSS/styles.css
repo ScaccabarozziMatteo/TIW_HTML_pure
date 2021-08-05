@@ -100,4 +100,6 @@ a:hover {
 
 .positiveMessagge {
     color: green;
+    background-color: #EDF2F5;
+    animation:blinkingText 1.2s infinite;
 }

@@ -12,34 +12,8 @@
 
 <h2>Inserisci tutti i tuoi dati nel form:</h2>
 
-<form class="signupForm" action="signupServlet" method="post">
-    <label for="name">Nome:</label><br>
-    <input type="text" id="name" name="name" required><br>
-    <label for="surname">Cognome:</label><br>
-    <input type="text" id="surname" name="surname" required><br>
-    <label for="address">Indirizzo:</label><br>
-    <input type="text" id="address" name="address" required><br>
-    <label for="sex">Sesso:</label>
-    <select id="sex" name="sex">
-        <option value="male">Maschio</option>
-        <option value="female">Femmina</option>
-        <option value="notdefine">Non definito</option>
-    </select><br>
-    <label for="email">E-Mail:</label><br>
-    <input type="text" id="email" name="email" required><br>
-    <label for="password">Password:</label><br>
-    <input type="text" id="password" name="password" required><br>
-    <label for="password2">Ripeti Password:</label><br>
-    <input type="text" id="password2" name="password2" required><br>
-    <br>
-    <input type="submit" value="Registrati">
-    <p class="positiveMessagge" th:if="${session.codeResult == 1}">Utente registrato!</p>
-    <p class="error" th:if="${session.codeResult == 2}">E-mail già presente nei nostri sistemi!</p>
-    <p class="error" th:if="${session.codeResult == 3}">Dati non validi!</p>
-    <p class="error" th:if="${session.codeResult == 4}">Le password non corrispondono!</p>
-    <p class="error" th:if="${session.codeResult == 5}">Errore!</p>
-
-</form>
+<div th:if="${form == 1}" th:insert="templates/template1 :: signupCustomer"></div>
+<div th:if="${form == 2}" th:insert="templates/template1 :: signupSupplier"></div>
 
 <footer th:insert="templates/template1 :: footer"></footer>
 </body>

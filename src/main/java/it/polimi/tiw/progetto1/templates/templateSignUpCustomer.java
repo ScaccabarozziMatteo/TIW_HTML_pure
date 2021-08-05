@@ -13,8 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(name = "index", urlPatterns = "/index.html")
-public class templateIndex extends HttpServlet {
+@WebServlet(name = "signupCustomer", urlPatterns = "/signupCustomer")
+public class templateSignUpCustomer extends HttpServlet {
 
     private TemplateEngine templateEngine;
 
@@ -29,19 +29,13 @@ public class templateIndex extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String path = "/index";
+        String path = "/WEB-INF/signup";
         ServletContext servletContext = getServletContext();
         final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-
-        ctx.setVariable("errorNoCredential", servletContext.getAttribute("errorNoCredential"));
-        ctx.setVariable("errorLoginSupplier", servletContext.getAttribute("errorLoginSupplier"));
-        ctx.setVariable("errorLoginCustomer", servletContext.getAttribute("errorLoginCustomer"));
+        ctx.setVariable("form", 1);
+        ctx.setVariable("codeResult", servletContext.getAttribute("codeResult"));
         templateEngine.process(path, ctx, response.getWriter());
-        ctx.removeVariable("errorNoCredential");
-        ctx.removeVariable("errorLoginSupplier");
-        ctx.removeVariable("errorLoginCustomer");
-        servletContext.removeAttribute("errorNoCredential");
-        servletContext.removeAttribute("errorLoginSupplier");
-        servletContext.removeAttribute("errorLoginCustomer");
+        ctx.removeVariable("codeResult");
+        servletContext.removeAttribute("codeResult");
     }
 }
