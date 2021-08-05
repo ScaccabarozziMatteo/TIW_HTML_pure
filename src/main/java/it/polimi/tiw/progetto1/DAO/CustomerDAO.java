@@ -3,6 +3,7 @@ package it.polimi.tiw.progetto1.DAO;
 import it.polimi.tiw.progetto1.Customer;
 
 
+import javax.servlet.http.HttpServletResponse;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -23,11 +24,11 @@ public class CustomerDAO {
 
         String SQLQuery = "SELECT * FROM dbtest.customers";
 
-        try (   PreparedStatement statement = connection.prepareStatement(SQLQuery);
-                ResultSet resultSet = statement.executeQuery();
+        try (PreparedStatement statement = connection.prepareStatement(SQLQuery);
+             ResultSet resultSet = statement.executeQuery();
         ) {
             while (resultSet.next()) {
-                Customer customer = new Customer(resultSet.getString("name"), resultSet.getString("surname"), resultSet.getString("email"), resultSet.getString("address"), resultSet.getString("password"), resultSet.getString("sex") );
+                Customer customer = new Customer(resultSet.getString("name"), resultSet.getString("surname"), resultSet.getString("email"), resultSet.getString("address"), resultSet.getString("password"), resultSet.getString("sex"));
                 customers.add(customer);
             }
         }
@@ -48,19 +49,35 @@ public class CustomerDAO {
         }
     }
 
-    public boolean findExistCustomer(String email, String password) throws SQLException {
-        String Query = "SELECT email, password FROM dbtest.customers";
+    public Customer getCustomer(String email, String password) throws SQLException {
+        String Query = "SELECT * FROM dbtest.customers WHERE customers.email LIKE ? AND customers.password LIKE ?";
+        Customer customer = null;
 
-        try (
-                PreparedStatement statement = connection.prepareStatement(Query);
-                ResultSet resultSet = statement.executeQuery();
-        ) {
-            while (resultSet.next()) {
-               if (email.equals(resultSet.getString("email")) && password.equals("password"))
-                   return true;
-            }
+        try (PreparedStatement statement = connection.prepareStatement(Query);) {
+
+            statement.setString(1, email);
+            statement.setString(2, password);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next())
+            if (email.equals(resultSet.getString("email")) && password.equals(resultSet.getString("password")))
+                customer = new Customer(resultSet.getString("name"), resultSet.getString("surname"), resultSet.getString("email"), resultSet.getString("address"), resultSet.getString("password"), resultSet.getString("sex"));
         }
-        return false;
+        return customer;
     }
+    public boolean findIfExistCustomer(String email) throws SQLException {
+        String Query = "SELECT email FROM dbtest.customers WHERE customers.email LIKE ?";
+        boolean returnValue = false;
 
+        try (PreparedStatement statement = connection.prepareStatement(Query);) {
+
+            statement.setString(1, email);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next())
+                if (email.equals(resultSet.getString("email")))
+                    returnValue = true;
+        }
+        return returnValue;
+    }
 }

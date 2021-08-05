@@ -33,6 +33,12 @@
     <input type="text" id="password2" name="password2" required><br>
     <br>
     <input type="submit" value="Registrati">
+    <p class="positiveMessagge" th:if="${session.codeResult == 1}">Utente registrato!</p>
+    <p class="error" th:if="${session.codeResult == 2}">E-mail già presente nei nostri sistemi!</p>
+    <p class="error" th:if="${session.codeResult == 3}">Dati non validi!</p>
+    <p class="error" th:if="${session.codeResult == 4}">Le password non corrispondono!</p>
+    <p class="error" th:if="${session.codeResult == 5}">Errore!</p>
+
 </form>
 
 <footer th:insert="templates/template1 :: footer"></footer>

@@ -13,6 +13,18 @@
       </nav>
   </div>
 
+  <div th:fragment="headerLogged">
+      <nav class="navigation-bar">
+          <a th:href="@{index.html}">
+              <img class="logo" th:src="@{templates/logo.png}" alt="logo">
+          </a>
+          <ul>
+              <li><a th:href="@{index.html}">Home</a></li>
+              <li><a class="logoutButton" href="logout">Esci</a></li>
+          </ul>
+      </nav>
+  </div>
+
   <p th:fragment="footer">&copy; Diritti riservati</p>
 
   </body>

@@ -73,14 +73,15 @@ public class LoginServlet extends HttpServlet {
                     return;
                 }
                 try {
-                    if (customerDAO.findExistCustomer(emailCustomer, passwordCustomer)) {
+                    Customer customer = customerDAO.getCustomer(emailCustomer, passwordCustomer);
+                    if (customer != null) {
                         Cookie c1 = new Cookie("email", emailCustomer);     //the username and password are encrypted
                         Cookie c2 = new Cookie("password", passwordCustomer);
                         c1.setMaxAge(20000);
                         c2.setMaxAge(20000);
                         session.setAttribute("login", emailCustomer);
-                        session.setAttribute("name", "Vale");
-                        session.setAttribute("sex", "female");
+                        session.setAttribute("name", customer.getName());
+                        session.setAttribute("sex", customer.getSex());
                         response.addCookie(c1);
                         response.addCookie(c2); //sends cookies to the browser
                         response.sendRedirect("PersonalArea");

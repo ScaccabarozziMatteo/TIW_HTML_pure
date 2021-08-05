@@ -8,11 +8,16 @@
     <link rel="stylesheet" type="text/css" th:href="@{./CSS/styles.css}">
 </head>
 <body>
+<header th:insert="templates/template1 :: headerLogged"></header>
 <h1>
     <span th:if="${session.sex == 'male'}">Benvenuto</span>
     <span th:if="${session.sex == 'female'}">Benvenuta</span>
-    <span th:if="${session.sex == null}">Benvenut*</span>
+    <span th:if="${session.sex == 'notdefine'}">Benvenut*</span>
     <span th:text="${session.name}"></span>
 </h1>
+
+
+
+<footer th:insert="templates/template1 :: footer"></footer>
 </body>
 </html>

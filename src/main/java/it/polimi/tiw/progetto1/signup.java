@@ -1,6 +1,11 @@
 package it.polimi.tiw.progetto1;
 
 import it.polimi.tiw.progetto1.DAO.CustomerDAO;
+import it.polimi.tiw.progetto1.templates.templateSignUp;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.WebContext;
+import org.thymeleaf.templatemode.TemplateMode;
+import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -18,6 +23,7 @@ import java.sql.*;
 public class signup extends HttpServlet {
 
     private Connection connection = null;
+    private TemplateEngine templateEngine;
 
     @Override
     public void init() throws ServletException {
@@ -37,16 +43,16 @@ public class signup extends HttpServlet {
         } catch (SQLException e) {
             throw new UnavailableException("Impossibile connettersi");
         }
-
-
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession(true);
+        CustomerDAO customerDAO = new CustomerDAO(connection);
 
         String name, surname, password, password2, address, email, sex;
         String query;
+        templateSignUp templateSignUp = new templateSignUp();
         name = request.getParameter("name");
         surname = request.getParameter("surname");
         password = request.getParameter("password");
@@ -57,14 +63,27 @@ public class signup extends HttpServlet {
 
         try {
             if (!name.equals("") && !password.equals("") && !password2.equals("") && !address.equals("") && !email.equals("")) {
-                if (password.equals(password2)) {
-                    CustomerDAO customerDAO = new CustomerDAO(connection);
+                if (email.length() > 45 || name.length() > 45 || surname.length() > 45 || address.length() > 45 || password.length() > 45 || (!sex.equals("male") && !sex.equals("female") && !sex.equals("notdefine"))) {
+                    session.setAttribute("codeResult", 3);
+                    response.sendRedirect("signup");
+                }
+                else if (customerDAO.findIfExistCustomer(email)) {
+                    session.setAttribute("codeResult", 2);
+                    response.sendRedirect("signup");
+                }
+                else if (password.equals(password2)) {
                     customerDAO.createCustomer(email, name, surname, address, password, sex);
+                    session.setAttribute("codeResult", 1);
+                    response.sendRedirect("signup");
+                }
+                else if (!password.equals(password2)) {
+                    session.setAttribute("codeResult", 4);
+                    response.sendRedirect("signup");
 
-                    response.sendRedirect("index.html");
                 }
             } else {
-
+                session.setAttribute("codeResult", 5);
+                response.sendRedirect("signup");
             }
         } catch (SQLException e) {
             e.printStackTrace();

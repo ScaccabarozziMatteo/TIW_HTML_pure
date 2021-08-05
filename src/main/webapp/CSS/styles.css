@@ -97,3 +97,7 @@ a:hover {
     background-color: powderblue;
     text-decoration: underline;
 }
+
+.positiveMessagge {
+    color: green;
+}
