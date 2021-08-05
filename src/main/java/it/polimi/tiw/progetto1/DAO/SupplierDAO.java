@@ -37,6 +37,23 @@ public class SupplierDAO {
         return suppliers;
     }
 
+    public Supplier getSupplier(String code, String password) throws SQLException {
+        String Query = "SELECT * FROM dbtest.suppliers WHERE suppliers.code LIKE ? AND suppliers.password LIKE ?";
+        Supplier supplier = null;
+
+        try (PreparedStatement statement = connection.prepareStatement(Query);) {
+
+            statement.setString(1, code);
+            statement.setString(2, password);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next())
+                if (code.equals(resultSet.getString("code")) && password.equals(resultSet.getString("password")))
+                    supplier = new Supplier(resultSet.getString("code"), resultSet.getString("name"), resultSet.getString("password"), resultSet.getInt("evaluation"));
+        }
+        return supplier;
+    }
+
     public void createSupplier(String code, String name, String password) throws SQLException {
         String query = "INSERT into dbtest.suppliers (code, name, password, evaluation) VALUES(?, ?, ?, ?)";
         try (PreparedStatement pstatement = connection.prepareStatement(query);) {

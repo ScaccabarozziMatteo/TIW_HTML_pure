@@ -65,6 +65,7 @@ public class CustomerDAO {
         }
         return customer;
     }
+
     public boolean findIfExistCustomer(String email) throws SQLException {
         String Query = "SELECT email FROM dbtest.customers WHERE customers.email LIKE ?";
         boolean returnValue = false;

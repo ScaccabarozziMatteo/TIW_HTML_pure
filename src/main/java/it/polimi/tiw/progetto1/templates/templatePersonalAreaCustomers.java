@@ -10,8 +10,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
 
-@WebServlet(name = "personalArea", urlPatterns = "/PersonalArea")
-    public class templatePersonalArea extends HttpServlet {
+@WebServlet(name = "personalAreaCustomer", urlPatterns = "/PersonalAreaCustomer")
+    public class templatePersonalAreaCustomers extends HttpServlet {
 
     private TemplateEngine templateEngine;
 
@@ -33,7 +33,7 @@ import java.io.IOException;
 
             if (strLogin != null) {
 
-                String path = "/WEB-INF/AreaPersonale";
+                String path = "/WEB-INF/AreaPersonaleCliente";
                 ServletContext servletContext = getServletContext();
                 final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
                 templateEngine.process(path, ctx, response.getWriter());

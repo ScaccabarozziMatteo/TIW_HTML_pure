@@ -2,11 +2,21 @@
     float: left;
     width: 50%;
     height: 90%;
-    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
     padding-bottom: 10px;
     background-color: #EDF2F5;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     border-radius: 20px;
+}
+
+.signupForm {
+    float: left;
+    width: 30%;
+    height: 100%;
+    padding-bottom: 10px;
+    background-color: #EDF2F5;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 20px;
+    text-align: center;
 }
 
 .error {
@@ -99,7 +109,17 @@ a:hover {
 }
 
 .positiveMessagge {
-    color: green;
-    background-color: #EDF2F5;
-    animation:blinkingText 1.2s infinite;
+    color: darkgreen;
+    animation: blink-animation 1s steps(5, start) infinite;
+    -webkit-animation: blink-animation 1s steps(5, start) infinite;
+}
+@keyframes blink-animation {
+    to {
+        visibility: hidden;
+    }
+}
+@-webkit-keyframes blink-animation {
+    to {
+        visibility: hidden;
+    }
 }

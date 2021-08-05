@@ -63,15 +63,7 @@ public class LoginServlet extends HttpServlet {
 
             if (emailCustomer != null && !emailCustomer.equals("") && passwordCustomer != null && !passwordCustomer.equals("")) {
                 CustomerDAO customerDAO = new CustomerDAO(connection);
-                try {
-                    customers = customerDAO.list();
 
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                    response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-                            "Errore nella generazione dei clienti dal DB");
-                    return;
-                }
                 try {
                     Customer customer = customerDAO.getCustomer(emailCustomer, passwordCustomer);
                     if (customer != null) {
@@ -84,7 +76,7 @@ public class LoginServlet extends HttpServlet {
                         session.setAttribute("sex", customer.getSex());
                         response.addCookie(c1);
                         response.addCookie(c2); //sends cookies to the browser
-                        response.sendRedirect("PersonalArea");
+                        response.sendRedirect("PersonalAreaCustomer");
                     }
                     else {
                         ServletContext servletContext = getServletContext();
@@ -95,36 +87,31 @@ public class LoginServlet extends HttpServlet {
                     e.printStackTrace();
                 }
             }
-            else if (codeSupplier != null && !codeSupplier.equals("")) {
+            else if (codeSupplier != null && !codeSupplier.equals("") && passwordSupplier != null && !passwordSupplier.equals("")) {
 
                     SupplierDAO supplierDAO = new SupplierDAO(connection);
-                    try {
-                        suppliers = supplierDAO.list();
 
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-                                "Errore nella generazione dei fornitori dal DB");
-                        return;
-                    }
-                for (Supplier supplier : suppliers) {
-                    if (codeSupplier.equals(supplier.getCode()) && passwordSupplier.equals(supplier.getPassword())) {
+                try {
+                    Supplier supplier = supplierDAO.getSupplier(codeSupplier, passwordSupplier);
+                    if (supplier != null) {
                         Cookie c1 = new Cookie("code", codeSupplier);     //the username and password are encrypted
                         Cookie c2 = new Cookie("password", passwordSupplier);
                         c1.setMaxAge(20000);
                         c2.setMaxAge(20000);
                         session.setAttribute("login", codeSupplier);
+                        session.setAttribute("name", supplier.getName());
                         response.addCookie(c1);
                         response.addCookie(c2); //sends cookies to the browser
-                        response.sendRedirect("PersonalArea");
+                        response.sendRedirect("PersonalAreaSupplier");
 
-                        return;
                     }
                     else {
                         ServletContext servletContext = getServletContext();
                         servletContext.setAttribute("errorLoginSupplier", "Credenziali errate o account non esistente!");
                         response.sendRedirect("index.html");
                     }
+                } catch (SQLException e) {
+                    e.printStackTrace();
                 }
             }
             else if (emailCustomer == null || passwordCustomer == null && codeSupplier == null || passwordSupplier == null) {
