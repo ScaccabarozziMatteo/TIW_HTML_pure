@@ -1,5 +1,7 @@
 package it.polimi.tiw.progetto1;
 
+import it.polimi.tiw.progetto1.DAO.CustomerDAO;
+import it.polimi.tiw.progetto1.DAO.SupplierDAO;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
@@ -7,6 +9,7 @@ import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import java.io.*;
 import java.sql.*;
+import java.util.List;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.UnavailableException;
@@ -18,6 +21,8 @@ public class LoginServlet extends HttpServlet {
 
     private Connection connection = null;
     private TemplateEngine templateEngine;
+    private List<Customer> customers = null;
+    private List<Supplier> suppliers = null;
 
     @Override
     public void init() throws ServletException {
@@ -50,84 +55,88 @@ public class LoginServlet extends HttpServlet {
         throws IOException {
         HttpSession session = request.getSession();
 
-        String emailCustomer, passwordCustomer, emailSupplier, passwordSupplier;
+        String emailCustomer, passwordCustomer, codeSupplier, passwordSupplier;
         emailCustomer = request.getParameter("emailCustomer");
         passwordCustomer = request.getParameter("passwordCustomer");
-        emailSupplier = request.getParameter("emailSupplier");
+        codeSupplier = request.getParameter("codeSupplier");
         passwordSupplier = request.getParameter("passwordSupplier");
 
-        String query1 = "SELECT email, password FROM dbtest.customers";
-        String query2 = "SELECT email, password FROM dbtest.suppliers";
-        ResultSet result1 = null, result2 = null;
-        PreparedStatement pstatement1 = null, pstatement2 = null;
+            if (emailCustomer != null && !emailCustomer.equals("") && passwordCustomer != null && !passwordCustomer.equals("")) {
+                CustomerDAO customerDAO = new CustomerDAO(connection);
+                try {
+                    customers = customerDAO.list();
 
-
-        try {
-            if (emailCustomer != null && !emailCustomer.equals("") || passwordCustomer != null && !passwordCustomer.equals("")) {
-                pstatement1 = connection.prepareStatement(query1);
-                result1 = pstatement1.executeQuery();
-                while (result1.next()) {
-                    if (emailCustomer.equals(result1.getString("email")) && passwordCustomer.equals(result1.getString("password"))) {
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                            "Errore nella generazione dei clienti dal DB");
+                    return;
+                }
+                try {
+                    if (customerDAO.findExistCustomer(emailCustomer, passwordCustomer)) {
                         Cookie c1 = new Cookie("email", emailCustomer);     //the username and password are encrypted
                         Cookie c2 = new Cookie("password", passwordCustomer);
                         c1.setMaxAge(20000);
                         c2.setMaxAge(20000);
                         session.setAttribute("login", emailCustomer);
+                        session.setAttribute("name", "Vale");
+                        session.setAttribute("sex", "female");
                         response.addCookie(c1);
                         response.addCookie(c2); //sends cookies to the browser
                         response.sendRedirect("PersonalArea");
                     }
                     else {
                         ServletContext servletContext = getServletContext();
+                        session.invalidate();
                         WebContext webContext = new WebContext(request, response, servletContext, request.getLocale());
                         webContext.setVariable("errorLoginCustomer", "Credenziali errate o account non esistente!");
                         templateEngine.process("/index", webContext, response.getWriter());
                     }
+                } catch (SQLException e) {
+                    e.printStackTrace();
                 }
             }
-            else if (emailSupplier != null && !emailSupplier.equals("")) {
-                pstatement2 = connection.prepareStatement(query2);
-                result2 = pstatement2.executeQuery();
-                while (result2.next()) {
-                    if (emailSupplier.equals(result2.getString("email")) && emailSupplier.equals(result2.getString("password"))) {
-                        Cookie c1 = new Cookie("email", emailSupplier);     //the username and password are encrypted
+            else if (codeSupplier != null && !codeSupplier.equals("")) {
+
+                    SupplierDAO supplierDAO = new SupplierDAO(connection);
+                    try {
+                        suppliers = supplierDAO.list();
+
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                                "Errore nella generazione dei fornitori dal DB");
+                        return;
+                    }
+                for (Supplier supplier : suppliers) {
+                    if (codeSupplier.equals(supplier.getCode()) && passwordSupplier.equals(supplier.getPassword())) {
+                        Cookie c1 = new Cookie("code", codeSupplier);     //the username and password are encrypted
                         Cookie c2 = new Cookie("password", passwordSupplier);
                         c1.setMaxAge(20000);
                         c2.setMaxAge(20000);
-                        session.setAttribute("login", emailSupplier);
+                        session.setAttribute("login", codeSupplier);
                         response.addCookie(c1);
                         response.addCookie(c2); //sends cookies to the browser
                         response.sendRedirect("PersonalArea");
+
+                        return;
                     }
                     else {
                         ServletContext servletContext = getServletContext();
+                        session.invalidate();
                         WebContext webContext = new WebContext(request, response, servletContext, request.getLocale());
                         webContext.setVariable("errorLoginSupplier", "Credenziali errate o account non esistente!");
                         templateEngine.process("/index", webContext, response.getWriter());
                     }
                 }
             }
-            else if (emailCustomer == null || passwordCustomer == null && emailSupplier == null || passwordSupplier == null) {
+            else if (emailCustomer == null || passwordCustomer == null && codeSupplier == null || passwordSupplier == null) {
                 ServletContext servletContext = getServletContext();
+                session.invalidate();
                 WebContext webContext = new WebContext(request, response, servletContext, request.getLocale());
                 webContext.setVariable("errorNoCredential", "Credenziali non valide!");
                 templateEngine.process("/index", webContext, response.getWriter());
-
             }
-        } catch (SQLException e) {
-            response.sendError(404);
-        } finally {
-            try {
-                assert result1 != null;
-                result1.close();
-                assert result2 != null;
-                result2.close();
-                pstatement1.close();
-                pstatement2.close();
-            } catch (Exception e1) {
-                System.out.println("Errore chiusura connessioni con il DB");
-            }
-        }
     }
 
     public void destroy() {

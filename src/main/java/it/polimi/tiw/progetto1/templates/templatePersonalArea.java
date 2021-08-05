@@ -51,9 +51,9 @@ import java.sql.*;
             String strLogin = (String) session.getAttribute("login");
 
             if (strLogin != null) {
-                    String name = null;
 
-                    String query = "SELECT name FROM dbtest.customers WHERE email LIKE '" + strLogin + "'";
+                /*
+                    String query = "SELECT name, sex FROM dbtest.customers WHERE email LIKE '" + strLogin + "'";
                     ResultSet result = null;
                     PreparedStatement pstatement = null;
 
@@ -63,6 +63,7 @@ import java.sql.*;
                     result = pstatement.executeQuery();
                     while (result.next()) {
                         name = result.getString("name");
+                        sex = result.getString("sex");
                     }
 
                     } catch (SQLException e) {
@@ -82,11 +83,12 @@ import java.sql.*;
                     }
 
 
+                 */
+
 
                 String path = "/WEB-INF/AreaPersonale";
                 ServletContext servletContext = getServletContext();
                 final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-                ctx.setVariable("name", name);
                 templateEngine.process(path, ctx, response.getWriter());
             }
             else {

@@ -1,5 +1,7 @@
 package it.polimi.tiw.progetto1;
 
+import it.polimi.tiw.progetto1.DAO.CustomerDAO;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.UnavailableException;
@@ -43,37 +45,30 @@ public class signup extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession(true);
 
-        String name, password;
-        name = request.getParameter("username");
+        String name, surname, password, password2, address, email, sex;
+        String query;
+        name = request.getParameter("name");
+        surname = request.getParameter("surname");
         password = request.getParameter("password");
+        password2 = request.getParameter("password2");
+        address = request.getParameter("address");
+        email = request.getParameter("email");
+        sex = request.getParameter("sex");
 
-        String catalog = request.getParameter("catalog"); // nullity test omitted..
-        String query = "INSERT INTO dbtest.customers VALUES ('name', 'password');";
-        ResultSet result = null;
-        PreparedStatement pstatement = null;
-        response.setContentType("text/plain");
-        PrintWriter out = response.getWriter();
         try {
-            pstatement = connection.prepareStatement(query);
-            result = pstatement.executeQuery();
-            while (result.next()) {
-                if(name.equals(result.getString("name")) && password.equals(result.getString("password"))) {
-                    response.sendRedirect("AreaPersonale.html");
+            if (!name.equals("") && !password.equals("") && !password2.equals("") && !address.equals("") && !email.equals("")) {
+                if (password.equals(password2)) {
+                    CustomerDAO customerDAO = new CustomerDAO(connection);
+                    customerDAO.createCustomer(email, name, surname, address, password, sex);
+
+                    response.sendRedirect("index.html");
                 }
-                out.println("Name: " + result.getString("Name") + " Quantity: " + result.getInt("Quantity") + " Price: " + result.getInt("price"));
-            }
+            } else {
 
-        } catch (SQLException e) { out.append("SQL ERROR");}
-        finally {
-            try {result.close();
-            } catch (Exception e1) {out.append("SQL RES ERROR");}
-            try {
-                assert pstatement != null;
-                pstatement.close();
-            } catch (Exception e1) {out.append("SQL STMT ERROR");
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-
     }
 
     public void destroy() {
