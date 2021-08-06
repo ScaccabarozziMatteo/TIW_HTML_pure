@@ -30,4 +30,8 @@ public class Supplier implements Serializable {
         return password;
     }
 
+    public int getEvaluation() {
+        return evaluation;
+    }
+
 }

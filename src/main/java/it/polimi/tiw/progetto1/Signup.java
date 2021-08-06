@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.sql.*;
 
 @WebServlet(name = "signupServlet", value = "/signupServlet")
-public class signup extends HttpServlet {
+public class Signup extends HttpServlet {
 
     private Connection connection = null;
 

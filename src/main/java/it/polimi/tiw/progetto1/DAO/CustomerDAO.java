@@ -3,7 +3,6 @@ package it.polimi.tiw.progetto1.DAO;
 import it.polimi.tiw.progetto1.Customer;
 
 
-import javax.servlet.http.HttpServletResponse;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
