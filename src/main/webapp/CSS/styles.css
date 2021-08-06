@@ -8,6 +8,37 @@
     border-radius: 20px;
 }
 
+.searchBar {
+    float: right;
+    width:20%;
+    height:40px;
+    font-size:inherit;
+    border-radius: 6px;
+    margin:-55px 20px;
+    border: 1px solid #ccc;
+}
+
+.insertProduct {
+    float: left;
+    width: 40%;
+    height: 100%;
+    padding: 15px 15px;
+    background-color: #EDF2F5;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 20px;
+    text-align: center;
+}
+
+.inputInsertProd {
+    height: 20px;
+    width: 75%;
+}
+
+.inputInsertProdDescr {
+    height: 70px;
+    width: 75%
+}
+
 .signupForm {
     float: left;
     width: 30%;
@@ -91,9 +122,13 @@ body {
     background-color: #2D86A1;
     font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
 }
+
 footer {
-    padding-top: 30%;
+    clear: both;
+    position: relative;
+    padding-top :5%
 }
+
 .formLogin {
     text-align: center;
 }

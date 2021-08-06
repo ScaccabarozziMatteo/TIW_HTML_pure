@@ -20,7 +20,6 @@ import javax.servlet.http.*;
 public class LoginServlet extends HttpServlet {
 
     private Connection connection = null;
-    private TemplateEngine templateEngine;
     private List<Customer> customers = null;
     private List<Supplier> suppliers = null;
 
@@ -41,13 +40,6 @@ public class LoginServlet extends HttpServlet {
         } catch (SQLException e) {
             throw new UnavailableException("Impossibile connettersi");
         }
-
-        ServletContext servletContext = getServletContext();
-        ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver(servletContext);
-        templateResolver.setTemplateMode(TemplateMode.HTML);
-        templateResolver.setSuffix(".html");
-        this.templateEngine = new TemplateEngine();
-        this.templateEngine.setTemplateResolver(templateResolver);
 
     }
 

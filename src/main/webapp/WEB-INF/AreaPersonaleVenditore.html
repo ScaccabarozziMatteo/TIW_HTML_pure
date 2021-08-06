@@ -8,11 +8,34 @@
     <link rel="stylesheet" type="text/css" th:href="@{./CSS/styles.css}">
 </head>
 <body>
-<header th:insert="templates/template1 :: headerLogged"></header>
+<header th:insert="templates/template1 :: headerLoggedSupplier"></header>
 <h1>Benvenuto <span th:text="${session.name}"></span>
 </h1>
 
-<h3>Inserisci un nuovo prodotto:</h3>
+<form class="insertProduct" action="insertProduct" method="post">
+    <h2>Inserisci un nuovo prodotto:</h2>
+
+    <label for="code">Codice Articolo:</label><br>
+    <input class="inputInsertProd" type="text" id="code" name="code" required><br>
+    <label for="nameProduct">Nome Articolo:</label><br>
+    <input class="inputInsertProd" type="text" id="nameProduct" name="nameProduct" maxlength="45" required><br>
+    <label for="categoryProduct">Categoria:</label><br>
+    <input type="text" class="inputInsertProd" maxlength="45" id="categoryProduct" name="categoryProduct" required><br>
+    <label for="quantityProduct">Quantità:</label><br>
+    <input type="number" class="inputInsertProd" id="quantityProduct" name="quantityProduct" required><br>
+    <label for="descriptionProd">Descrizione:</label><br>
+    <textarea class="inputInsertProdDescr" cols="40" rows="5" maxlength="300" id="descriptionProd" name="descriptionProd" required></textarea><br>
+    <label for="imageInput">Immagine Articolo:</label><br>
+    <input type="file" id="imageInput" name="imageInput"><br>
+    <br>
+    <input type="submit" value="Inserisci il prodotto">
+    <p class="positiveMessagge" th:if="${codeResult == 1}">Prodotto inserito!</p>
+    <p class="error" th:if="${codeResult == 2}">Dati non validi!</p>
+    <p class="error" th:if="${codeResult == 3}">Errore!</p>
+
+
+</form>
+
 
 
 

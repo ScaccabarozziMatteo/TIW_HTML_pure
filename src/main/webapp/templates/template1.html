@@ -13,7 +13,25 @@
       </nav>
   </div>
 
-  <div th:fragment="headerLogged">
+  <div th:fragment="headerLoggedCustomer">
+      <nav class="navigation-bar">
+          <a th:href="@{index.html}">
+              <img class="logo" th:src="@{templates/logo.png}" alt="logo">
+          </a>
+          <ul>
+              <li><a th:href="@{index.html}">Home</a></li>
+              <li><a class="ordersButton" href="#">Ordini</a></li>
+              <li><a class="cartButton" href="#">Carrello</a></li>
+              <li><a class="logoutButton" href="logout">Esci</a></li>
+          </ul>
+          <form action="searchProduct">
+            <input type="search" class="searchBar" name="search" placeholder="Cerca un prodotto..">
+          </form>
+
+      </nav>
+  </div>
+
+  <div th:fragment="headerLoggedSupplier">
       <nav class="navigation-bar">
           <a th:href="@{index.html}">
               <img class="logo" th:src="@{templates/logo.png}" alt="logo">
@@ -77,7 +95,6 @@
       <p class="error" th:if="${codeResult == 5}">Errore!</p>
 
   </form>
-
 
 
   <p th:fragment="footer">&copy; Diritti riservati</p>

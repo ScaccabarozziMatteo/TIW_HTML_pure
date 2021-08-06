@@ -1,8 +1,8 @@
 package it.polimi.tiw.progetto1.DAO;
 
 import it.polimi.tiw.progetto1.Product;
-import it.polimi.tiw.progetto1.Supplier;
 
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -35,5 +35,33 @@ public class ProductDAO {
         }
 
         return products;
+    }
+
+    public boolean ifExistsProduct(int code) throws SQLException {
+        String Query = "SELECT code FROM dbtest.products WHERE products.code LIKE ?";
+        boolean returnValue = false;
+
+        try (PreparedStatement statement = connection.prepareStatement(Query);) {
+
+            statement.setInt(1, code);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next())
+                if (code == resultSet.getInt("code"))
+                    returnValue = true;
+        }
+        return returnValue;
+    }
+
+    public void createProduct(int code, String name, String description, String category, BufferedImage photo) throws SQLException {
+        String query = "INSERT into dbtest.products (code, name, description, category, photo) VALUES(?, ?, ?, ?, ?)";
+        try (PreparedStatement pstatement = connection.prepareStatement(query);) {
+            pstatement.setInt(1, code);
+            pstatement.setString(2, name);
+            pstatement.setString(3, description);
+            pstatement.setString(4, category);
+            pstatement.setBinaryStream(5, photo);
+            pstatement.executeUpdate();
+        }
     }
 }

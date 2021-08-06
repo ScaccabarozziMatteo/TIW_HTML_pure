@@ -8,7 +8,7 @@
     <link rel="stylesheet" type="text/css" th:href="@{./CSS/styles.css}">
 </head>
 <body>
-<header th:insert="templates/template1 :: headerLogged"></header>
+<header th:insert="templates/template1 :: headerLoggedCustomer"></header>
 <h1>
     <span th:if="${session.sex == 'male'}">Benvenuto</span>
     <span th:if="${session.sex == 'female'}">Benvenuta</span>
