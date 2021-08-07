@@ -29,14 +29,18 @@ public class templatePersonalAreaSuppliers extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         HttpSession session = request.getSession();
-        String strLogin = (String) session.getAttribute("login");
+        String strLogin = (String) session.getAttribute("supplierCode");
 
         if (strLogin != null) {
 
             String path = "/WEB-INF/AreaPersonaleVenditore";
             ServletContext servletContext = getServletContext();
             final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+            ctx.setVariable("codeResult", servletContext.getAttribute("codeResult"));
             templateEngine.process(path, ctx, response.getWriter());
+            ctx.removeVariable("codeResult");
+            servletContext.removeAttribute("codeResult");
+
         }
         else {
             response.sendRedirect("index.html");

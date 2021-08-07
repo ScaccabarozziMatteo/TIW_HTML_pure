@@ -90,7 +90,7 @@ public class LoginServlet extends HttpServlet {
                         Cookie c2 = new Cookie("password", passwordSupplier);
                         c1.setMaxAge(20000);
                         c2.setMaxAge(20000);
-                        session.setAttribute("login", codeSupplier);
+                        session.setAttribute("supplierCode", codeSupplier);
                         session.setAttribute("name", supplier.getName());
                         response.addCookie(c1);
                         response.addCookie(c2); //sends cookies to the browser

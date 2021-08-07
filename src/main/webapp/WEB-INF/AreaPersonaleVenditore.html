@@ -30,8 +30,9 @@
     <br>
     <input type="submit" value="Inserisci il prodotto">
     <p class="positiveMessagge" th:if="${codeResult == 1}">Prodotto inserito!</p>
-    <p class="error" th:if="${codeResult == 2}">Dati non validi!</p>
-    <p class="error" th:if="${codeResult == 3}">Errore!</p>
+    <p class="positiveMessagge" th:if="${codeResult == 2}">Prodotto già presente, disponibilità aggiornata!</p>
+    <p class="error" th:if="${codeResult == 3}">Dati non validi!</p>
+    <p class="error" th:if="${codeResult == 4}">Errore!</p>
 
 
 </form>
