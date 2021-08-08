@@ -12,6 +12,7 @@
 <h1>Benvenuto <span th:text="${session.name}"></span>
 </h1>
 
+<div>
 <form class="insertProduct" action="insertProduct" method="post">
     <h2>Inserisci un nuovo prodotto:</h2>
 
@@ -26,16 +27,48 @@
     <label for="descriptionProd">Descrizione:</label><br>
     <textarea class="inputInsertProdDescr" cols="40" rows="5" maxlength="300" id="descriptionProd" name="descriptionProd" required></textarea><br>
     <label for="imageInput">Immagine Articolo:</label><br>
-    <input type="file" id="imageInput" name="imageInput"><br>
+    <input type="file" id="imageInput" name="imageInput" required><br>
     <br>
     <input type="submit" value="Inserisci il prodotto">
     <p class="positiveMessagge" th:if="${codeResult == 1}">Prodotto inserito!</p>
     <p class="positiveMessagge" th:if="${codeResult == 2}">Prodotto già presente, disponibilità aggiornata!</p>
-    <p class="error" th:if="${codeResult == 3}">Dati non validi!</p>
-    <p class="error" th:if="${codeResult == 4}">Errore!</p>
+    <p class="error" th:if="${codeResult == 3}">Parametri non validi!</p>
+    <p class="error" th:if="${codeResult == 4}">Parametri mancanti!</p>
+
+</form>
+<div>
+<form class="insertShipmentPolicy" action="insertShipmentPolicy" method="post">
+    <h2>Inserisci una nuova politica di spedizione:</h2>
+    <h4>Compila una delle due sezioni</h4>
+
+    <label for="minArticles">Da </label>
+    <input type="number" id="minArticles" name="minArticles">
+    <label for="maxArticles"> a </label>
+    <input type="number" id="maxArticles" name="maxArticles" maxlength="45"><span> articoli</span><br>
+    <label for="shipmentPrice">Prezzo spedizione: </label>
+    <input type="number" class="shipmentPrice" maxlength="45" id="shipmentPrice" name="shipmentPrice"><br>
+
+    <h2>Oppure</h2><br>
+
+    <label for="quantityFreeShipment">Numero articoli per spedizione gratuita:</label><br>
+    <input type="number" id="quantityFreeShipment" name="quantityFreeShipment"><br>
+    <br>
+    <input type="submit" value="Inserisci la politica di spedizione">
+    <p class="positiveMessagge" th:if="${codeResult == 5}">Politica di spedizione inserita!</p>
+    <p class="error" th:if="${codeResult == 6}">Politica già presente o con valori non compatibili!</p>
+    <p class="error" th:if="${codeResult == 7}">Parametri mancanti o non validi!</p>
+    <p class="error" th:if="${codeResult == 8}">Politica di spedizione gratuita già presente o non coerente con altre politiche di spedizione!</p>
 
 
 </form>
+</div>
+
+    <div class="shipmentPolicies">
+        <table>
+            <tr th:each="shipmentPolicy: ${shipmentPolicies}"><td th:text="${shipmentPolicy.id}"></td></tr>
+        </table>
+    </div>
+</div>
 
 
 

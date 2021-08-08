@@ -1,7 +1,6 @@
 package it.polimi.tiw.progetto1;
 
 import it.polimi.tiw.progetto1.DAO.ProductDAO;
-import it.polimi.tiw.progetto1.DAO.Ship_PolicyDAO;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletContext;
@@ -45,32 +44,31 @@ public class InsertProduct extends HttpServlet {
 
         String nameProduct, categoryProduct, descriptionProduct;
         InputStream photo;
-        int codeProduct = -1, quantity = 0;
+        int codeProduct = -1, quantity;
         nameProduct = request.getParameter("nameProduct");
         categoryProduct = request.getParameter("categoryProduct");
         descriptionProduct = request.getParameter("descriptionProd");
         photo = request.getInputStream();
 
         try {
-            ImageIO.read(photo);
-        } catch (IllegalArgumentException e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Inserisci un'immagine valida!");
-        }
-
-        try {
             codeProduct = Integer.parseInt(request.getParameter("code"));
             quantity = Integer.parseInt(request.getParameter("quantityProduct"));
         }
         catch (NumberFormatException e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Inserisci un valore corretto per la quantità!");
+            quantity = 0;
         }
 
-        if (nameProduct != null && !nameProduct.equals("")  && (quantity > 0) && descriptionProduct != null && !descriptionProduct.equals("") && categoryProduct != null && !categoryProduct.equals("") && photo
+        try {
+            ImageIO.read(photo);
+        } catch (IllegalArgumentException e) {
+            quantity = 0;
+        }
+
+        if (nameProduct != null && !nameProduct.equals("") && descriptionProduct != null && !descriptionProduct.equals("") && categoryProduct != null && !categoryProduct.equals("") && photo
          != null) {
             ProductDAO productDAO = new ProductDAO(connection);
-            Ship_PolicyDAO ship_policyDAO = new Ship_PolicyDAO(connection);
 
-            if (nameProduct.length() < 46 && descriptionProduct.length() < 301 && categoryProduct.length() < 46) {
+            if (quantity != 0 && nameProduct.length() < 46 && descriptionProduct.length() < 301 && categoryProduct.length() < 46) {
 
                 try {
                     if (productDAO.ifExistsProduct(codeProduct)) {
@@ -91,14 +89,12 @@ public class InsertProduct extends HttpServlet {
                 }
 
             } else {
-                ServletContext servletContext = getServletContext();
-                servletContext.setAttribute("errorParameters", "Parametri non validi!");
-                response.sendRedirect("index.html");
+                session.getServletContext().setAttribute("codeResult", 3);
+                response.sendRedirect("PersonalAreaSupplier");
             }
         }
         else {
-            ServletContext servletContext = getServletContext();
-            servletContext.setAttribute("errorNoData", "Parametri mancanti!");
+            session.getServletContext().setAttribute("codeResult", 4);
             response.sendRedirect("PersonalAreaSupplier");
         }
     }

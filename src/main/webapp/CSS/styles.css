@@ -8,6 +8,20 @@
     border-radius: 20px;
 }
 
+.insertShipmentPolicy {
+    float: right;
+    background-color: #EDF2F5;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 20px;
+    width: 50%;
+    height: 100%;
+    padding: 15px;
+}
+
+.shipmentPolicies {
+    float: left;
+}
+
 .searchBar {
     float: right;
     width:20%;
@@ -26,7 +40,7 @@
     background-color: #EDF2F5;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     border-radius: 20px;
-    text-align: center;
+    text-align: left;
 }
 
 .inputInsertProd {
