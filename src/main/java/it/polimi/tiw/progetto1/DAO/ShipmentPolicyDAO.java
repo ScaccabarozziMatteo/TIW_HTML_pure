@@ -20,7 +20,7 @@ public class ShipmentPolicyDAO {
     public List<ShipmentPolicy> shipmentPolicyList(String supplier) throws SQLException {
         List<ShipmentPolicy> shipmentPolicies = new ArrayList<>();
 
-        String SQLQuery = "SELECT * FROM dbtest.shipment_policy WHERE supplier LIKE ?";
+        String SQLQuery = "SELECT * FROM dbtest.shipment_policy WHERE supplier LIKE ? ORDER BY min_articles";
 
         try (PreparedStatement statement = connection.prepareStatement(SQLQuery)) {
             statement.setString(1, supplier);
@@ -37,7 +37,7 @@ public class ShipmentPolicyDAO {
 
 
     public void createShipPolicy(int min_articles, int max_articles, String supplier, float costShipment) throws SQLException {
-        String query = "INSERT into dbtest.shipment_policy (min_articles, max_articles, supplier, cost_shipment) VALUES(?, ?, ?, ?)";
+        String query = "INSERT into dbtest.shipment_policy (min_articles, max_articles, supplier, cost_shipment, free_shipment) VALUES(?, ?, ?, ?, 0)";
         try (PreparedStatement pstatement = connection.prepareStatement(query);) {
 
             pstatement.setInt(1, min_articles);

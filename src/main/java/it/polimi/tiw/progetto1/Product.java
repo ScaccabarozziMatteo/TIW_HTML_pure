@@ -12,6 +12,7 @@ public class Product implements Serializable {
     private static final long serialVersionUID = 5467675345346L;
 
     private int code;
+    private int quantity;
     private String name;
     private String description;
     private String category;
@@ -19,6 +20,17 @@ public class Product implements Serializable {
 
     public Product(int code, String name, String description, String category, Blob image) throws SQLException, IOException {
         this.code = code;
+        this.name = name;
+        this.description = description;
+        this.category = category;
+
+        InputStream in = image.getBinaryStream();
+        this.image = ImageIO.read(in);
+    }
+
+    public Product(int code, int quantity, String name, String description, String category, Blob image) throws SQLException, IOException {
+        this.code = code;
+        this.quantity = quantity;
         this.name = name;
         this.description = description;
         this.category = category;
@@ -41,6 +53,10 @@ public class Product implements Serializable {
 
     public String getCategory() {
         return category;
+    }
+
+    public int getQuantity() {
+        return quantity;
     }
 
     public BufferedImage getImage() {

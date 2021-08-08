@@ -1,5 +1,6 @@
 package it.polimi.tiw.progetto1.templates;
 
+import it.polimi.tiw.progetto1.DAO.ProductDAO;
 import it.polimi.tiw.progetto1.DAO.ShipmentPolicyDAO;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
@@ -55,6 +56,7 @@ public class templatePersonalAreaSuppliers extends HttpServlet {
         HttpSession session = request.getSession();
         String strLogin = (String) session.getAttribute("supplierCode");
         ShipmentPolicyDAO shipmentPolicyDAO = new ShipmentPolicyDAO(connection);
+        ProductDAO productDAO = new ProductDAO(connection);
 
         if (strLogin != null) {
 
@@ -64,6 +66,7 @@ public class templatePersonalAreaSuppliers extends HttpServlet {
             ctx.setVariable("codeResult", servletContext.getAttribute("codeResult"));
             try {
                 ctx.setVariable("shipmentPolicies", shipmentPolicyDAO.shipmentPolicyList((String) session.getAttribute("supplierCode")));
+                ctx.setVariable("allProducts", productDAO.supplierProducts((String) session.getAttribute("supplierCode")));
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -71,6 +74,7 @@ public class templatePersonalAreaSuppliers extends HttpServlet {
             ctx.removeVariable("codeResult");
             servletContext.removeAttribute("codeResult");
             ctx.removeVariable("shipmentPolicies");
+            ctx.removeVariable("allProducts");
 
         }
         else

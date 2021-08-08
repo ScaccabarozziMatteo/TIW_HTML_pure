@@ -1,11 +1,11 @@
 .column {
     float: left;
-    width: 50%;
-    height: 90%;
+    width: 45%;
     padding-bottom: 10px;
     background-color: #EDF2F5;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     border-radius: 20px;
+    margin: 22px;
 }
 
 .insertShipmentPolicy {
@@ -13,13 +13,23 @@
     background-color: #EDF2F5;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     border-radius: 20px;
-    width: 50%;
+    width: 45%;
     height: 100%;
     padding: 15px;
+    margin: 15px
 }
 
 .shipmentPolicies {
-    float: left;
+    position: relative;
+}
+
+.bodyContainer {
+    position: relative;
+    bottom: auto;
+    right: 0;
+    left: 0;
+    overflow: hidden;
+    display: block;
 }
 
 .searchBar {
@@ -41,6 +51,7 @@
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     border-radius: 20px;
     text-align: left;
+    margin: 15px;
 }
 
 .inputInsertProd {
@@ -135,12 +146,14 @@ a:hover {
 body {
     background-color: #2D86A1;
     font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    display: block;
+    position: relative;
+    height: auto;
+    min-height: 100% !important;
 }
 
 footer {
-    clear: both;
     position: relative;
-    padding-top :5%
 }
 
 .formLogin {
@@ -171,4 +184,9 @@ a:hover {
     to {
         visibility: hidden;
     }
+}
+
+.login_body {
+    position: relative;
+    overflow: hidden;
 }

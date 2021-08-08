@@ -12,7 +12,7 @@
 <h1>Benvenuto <span th:text="${session.name}"></span>
 </h1>
 
-<div>
+<div class="bodyContainer">
 <form class="insertProduct" action="insertProduct" method="post">
     <h2>Inserisci un nuovo prodotto:</h2>
 
@@ -62,17 +62,26 @@
 
 </form>
 </div>
+</div>
+<div class="shipmentPolicies">
+    <h3>Politiche di spedizioni presenti</h3>
+    <table>
+        <tr><td>Da</td><td>A</td><td>Prezzo di spedizione</td></tr>
+        <tr th:each="shipmentPolicy: ${shipmentPolicies}"><td th:if="${shipmentPolicy.min_articles} > 0 and ${shipmentPolicy.min_articles} != 999999999" th:text="${shipmentPolicy.min_articles}"></td><td th:if="${shipmentPolicy.freeShipment} > 0" th:text="${shipmentPolicy.freeShipment}"></td><td th:if="${shipmentPolicy.min_articles} > 0 and ${shipmentPolicy.min_articles} != 999999999" th:text="${shipmentPolicy.max_articles}"><td th:if="${shipmentPolicy.min_articles} == 999999999"></td><td th:text="${#numbers.formatCurrency(shipmentPolicy.costShipment)}"></td></tr>
+    </table>
+</div>
 
-    <div class="shipmentPolicies">
-        <table>
-            <tr th:each="shipmentPolicy: ${shipmentPolicies}"><td th:text="${shipmentPolicy.id}"></td></tr>
-        </table>
-    </div>
+<div class="supplierGoods">
+    <h3>Articoli in magazzino</h3>
+    <table>
+        <tr><td>Codice</td><td>Nome</td><td>Descrizione</td><td>Categoria</td><td>Foto</td></tr>
+        <tr th:each="product: ${allProducts}"><td th:text="${product.code}"></td><td th:text="${product.name}"></td><td th:text="${product.description}"><td th:text="${product.category}"></td><td><img th:src="${product.image}"></td></tr>
+    </table>
 </div>
 
 
 
-
 <footer th:insert="templates/template1 :: footer"></footer>
+
 </body>
 </html>

@@ -39,6 +39,25 @@ public class ProductDAO {
         return products;
     }
 
+    public List<Product> supplierProducts(String supplier) throws SQLException {
+        List<Product> products = new ArrayList<>();
+
+        String SQLQuery = "SELECT sc.quantity, code, name, description, category, photo FROM dbtest.products INNER JOIN supplier_catalogue sc on products.code = sc.product";
+
+        try (PreparedStatement statement = connection.prepareStatement(SQLQuery);
+             ResultSet resultSet = statement.executeQuery();
+        ) {
+            while (resultSet.next()) {
+                Product product = new Product(resultSet.getInt("code"), resultSet.getInt("quantity"), resultSet.getString("name"), resultSet.getString("description"), resultSet.getString("category"), resultSet.getBlob("photo"));
+                products.add(product);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return products;
+    }
+
     public boolean ifExistsProduct(int code) throws SQLException {
         String Query = "SELECT code FROM dbtest.products WHERE products.code LIKE ?";
         boolean returnValue = false;
