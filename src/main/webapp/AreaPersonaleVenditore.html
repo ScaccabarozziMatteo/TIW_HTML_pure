@@ -74,7 +74,7 @@
 </div>
 
 <div class="supplierGoods">
-    <h3>Articoli in magazzino€</h3>
+    <h3>Articoli in magazzino</h3>
     <table>
         <tr><th>Codice</th><th>Nome</th><th>Descrizione</th><th>Categoria</th><th>Quantità</th><th>Prezzo</th><th>Foto</th></tr>
         <tr th:each="product: ${allProducts}"><td th:text="${product.code}"></td><td th:text="${product.name}"></td><td th:text="${product.description}"><td th:text="${product.category}"></td><td th:text="${product.quantity}"></td><td th:text="${#numbers.formatCurrency(product.price)}"></td><td><img th:src="@{'/upload/' + ${product.image}}" height="100" alt="imageProduct"/></td></tr>
