@@ -2,7 +2,9 @@ package it.polimi.tiw.progetto1.DAO;
 
 import it.polimi.tiw.progetto1.Product;
 
+import javax.servlet.http.Part;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,7 +31,7 @@ public class ProductDAO {
              ResultSet resultSet = statement.executeQuery();
         ) {
             while (resultSet.next()) {
-                Product product = new Product(resultSet.getInt("code"), resultSet.getString("name"), resultSet.getString("description"), resultSet.getString("category"), resultSet.getBlob("photo"));
+                Product product = new Product(resultSet.getInt("code"), resultSet.getString("name"), resultSet.getString("description"), resultSet.getString("category"), resultSet.getString("photo"));
                 products.add(product);
             }
         } catch (IOException e) {
@@ -48,7 +50,7 @@ public class ProductDAO {
              ResultSet resultSet = statement.executeQuery();
         ) {
             while (resultSet.next()) {
-                Product product = new Product(resultSet.getInt("code"), resultSet.getInt("quantity"), resultSet.getString("name"), resultSet.getString("description"), resultSet.getString("category"), resultSet.getBlob("photo"));
+                Product product = new Product(resultSet.getInt("code"), resultSet.getInt("quantity"), resultSet.getString("name"), resultSet.getString("description"), resultSet.getString("category"), resultSet.getString("photo"));
                 products.add(product);
             }
         } catch (IOException e) {
@@ -74,15 +76,17 @@ public class ProductDAO {
         return returnValue;
     }
 
-    public void createProduct(int code, String name, String description, String category, InputStream photo, int quantity, String supplier) throws SQLException {
+    public void createProduct(int code, String name, String description, String category, String photoPath, int quantity, String supplier) throws SQLException {
         String query = "INSERT into dbtest.products (code, name, description, category, photo) VALUES(?, ?, ?, ?, ?)";
         String query2 = "INSERT into dbtest.supplier_catalogue (product, supplier, quantity) VALUES (?, ?, ?)";
+
+
         try (PreparedStatement pstatement = connection.prepareStatement(query); PreparedStatement pstatement2 = connection.prepareStatement(query2)) {
             pstatement.setInt(1, code);
             pstatement.setString(2, name);
             pstatement.setString(3, description);
             pstatement.setString(4, category);
-            pstatement.setBinaryStream(5, photo);
+            pstatement.setString(5, photoPath);
             pstatement.executeUpdate();
 
             pstatement2.setInt(1, code);

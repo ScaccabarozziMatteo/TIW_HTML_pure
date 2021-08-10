@@ -1,20 +1,23 @@
 package it.polimi.tiw.progetto1;
 
 import it.polimi.tiw.progetto1.DAO.ProductDAO;
+import org.apache.commons.io.FileUtils;
 
-import javax.imageio.ImageIO;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.UnavailableException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.MissingResourceException;
 
 @WebServlet(name = "insertProduct", urlPatterns = "/insertProduct")
+@MultipartConfig
 public class InsertProduct extends HttpServlet {
 
     private Connection connection = null;
@@ -38,17 +41,24 @@ public class InsertProduct extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+            throws IOException, ServletException {
         HttpSession session = request.getSession();
         String supplierCode = (String) session.getAttribute("supplierCode");
 
-        String nameProduct, categoryProduct, descriptionProduct;
-        InputStream photo;
+        String PATH = getServletContext().getRealPath(File.separator + "upload") + File.separator;
+
+        String nameProduct, categoryProduct, descriptionProduct, photoName = null, photoExtension, photoPath;
+        Part photoPart;
         int codeProduct = -1, quantity;
+
         nameProduct = request.getParameter("nameProduct");
         categoryProduct = request.getParameter("categoryProduct");
         descriptionProduct = request.getParameter("descriptionProd");
-        photo = request.getInputStream();
+        photoPart = request.getPart("imageInput");
+        try {
+            photoName = Paths.get(photoPart.getSubmittedFileName()).getFileName().toString();
+        } catch (MissingResourceException ignored) {
+        }
 
         try {
             codeProduct = Integer.parseInt(request.getParameter("code"));
@@ -58,14 +68,7 @@ public class InsertProduct extends HttpServlet {
             quantity = 0;
         }
 
-        try {
-            ImageIO.read(photo);
-        } catch (IllegalArgumentException e) {
-            quantity = 0;
-        }
-
-        if (nameProduct != null && !nameProduct.equals("") && descriptionProduct != null && !descriptionProduct.equals("") && categoryProduct != null && !categoryProduct.equals("") && photo
-         != null) {
+        if (nameProduct != null && !nameProduct.equals("") && descriptionProduct != null && !descriptionProduct.equals("") && categoryProduct != null && !categoryProduct.equals("") && !photoName.equals("")) {
             ProductDAO productDAO = new ProductDAO(connection);
 
             if (quantity != 0 && nameProduct.length() < 46 && descriptionProduct.length() < 301 && categoryProduct.length() < 46) {
@@ -79,7 +82,27 @@ public class InsertProduct extends HttpServlet {
 
                     } else {
                         // create new product
-                        productDAO.createProduct(codeProduct, nameProduct, descriptionProduct, categoryProduct, photo, quantity, supplierCode);
+
+                        InputStream inputStream = photoPart.getInputStream();
+                        photoExtension = photoName.substring(photoName.lastIndexOf(".") +1);
+                        photoName = codeProduct + "." + photoExtension;
+                        photoPath = PATH + photoName;
+
+                        byte[] photoBytes;
+                        int len;
+                        photoBytes = photoPath.getBytes();
+
+                        File photoFile = new File(PATH + photoName);
+                        BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
+                        BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream(photoFile));
+                        while ((len = bufferedInputStream.read(photoBytes)) > 0) {
+                            bufferedOutputStream.write(photoBytes, 0, len);
+                        }
+                        bufferedInputStream.close();
+                        bufferedOutputStream.close();
+
+
+                        productDAO.createProduct(codeProduct, nameProduct, descriptionProduct, categoryProduct, photoName, quantity, supplierCode);
                         session.getServletContext().setAttribute("codeResult", 1);
                         response.sendRedirect("PersonalAreaSupplier");
 

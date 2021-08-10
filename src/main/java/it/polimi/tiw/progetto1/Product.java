@@ -16,27 +16,23 @@ public class Product implements Serializable {
     private String name;
     private String description;
     private String category;
-    private BufferedImage image;
+    private String image;
 
-    public Product(int code, String name, String description, String category, Blob image) throws SQLException, IOException {
+    public Product(int code, String name, String description, String category, String image) throws IOException {
         this.code = code;
         this.name = name;
         this.description = description;
         this.category = category;
-
-        InputStream in = image.getBinaryStream();
-        this.image = ImageIO.read(in);
+        this.image = image;
     }
 
-    public Product(int code, int quantity, String name, String description, String category, Blob image) throws SQLException, IOException {
+    public Product(int code, int quantity, String name, String description, String category, String image) throws SQLException, IOException {
         this.code = code;
         this.quantity = quantity;
         this.name = name;
         this.description = description;
         this.category = category;
-
-        InputStream in = image.getBinaryStream();
-        this.image = ImageIO.read(in);
+        this.image = image;
     }
 
     public int getCode() {
@@ -59,7 +55,7 @@ public class Product implements Serializable {
         return quantity;
     }
 
-    public BufferedImage getImage() {
+    public String getImage() {
         return image;
     }
 

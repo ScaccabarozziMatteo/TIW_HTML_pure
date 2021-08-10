@@ -13,7 +13,7 @@
 </h1>
 
 <div class="bodyContainer">
-<form class="insertProduct" action="insertProduct" method="post">
+<form class="insertProduct" action="insertProduct" method="POST" enctype="multipart/form-data">
     <h2>Inserisci un nuovo prodotto:</h2>
 
     <label for="code">Codice Articolo:</label><br>
@@ -74,8 +74,8 @@
 <div class="supplierGoods">
     <h3>Articoli in magazzino</h3>
     <table>
-        <tr><td>Codice</td><td>Nome</td><td>Descrizione</td><td>Categoria</td><td>Foto</td></tr>
-        <tr th:each="product: ${allProducts}"><td th:text="${product.code}"></td><td th:text="${product.name}"></td><td th:text="${product.description}"><td th:text="${product.category}"></td><td><img th:src="${product.image}"></td></tr>
+        <tr><td>Codice</td><td>Nome</td><td>Descrizione</td><td>Categoria</td><td>Quantità</td><td>Foto</td></tr>
+        <tr th:each="product: ${allProducts}"><td th:text="${product.code}"></td><td th:text="${product.name}"></td><td th:text="${product.description}"><td th:text="${product.category}"></td><td th:text="${product.quantity}"></td><td><img th:src="@{'/upload/' + ${product.image}}" height="100" alt="imageProduct"/></td></tr>
     </table>
 </div>
 
