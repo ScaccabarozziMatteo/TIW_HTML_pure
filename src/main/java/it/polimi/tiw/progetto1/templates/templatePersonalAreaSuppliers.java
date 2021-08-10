@@ -29,6 +29,7 @@ public class templatePersonalAreaSuppliers extends HttpServlet {
         templateResolver.setTemplateMode(TemplateMode.HTML);
         templateResolver.setSuffix(".html");
         this.templateEngine = new TemplateEngine();
+        templateResolver.setCharacterEncoding("UTF-8");
         this.templateEngine.setTemplateResolver(templateResolver);
 
 
@@ -59,8 +60,6 @@ public class templatePersonalAreaSuppliers extends HttpServlet {
         ProductDAO productDAO = new ProductDAO(connection);
 
         if (strLogin != null) {
-
-            System.out.println(getServletContext().getRealPath("/upload"));
 
             String path = "/AreaPersonaleVenditore";
             ServletContext servletContext = getServletContext();

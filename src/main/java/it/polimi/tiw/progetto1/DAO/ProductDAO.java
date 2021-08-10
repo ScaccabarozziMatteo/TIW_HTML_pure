@@ -2,12 +2,7 @@ package it.polimi.tiw.progetto1.DAO;
 
 import it.polimi.tiw.progetto1.Product;
 
-import javax.servlet.http.Part;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -44,17 +39,17 @@ public class ProductDAO {
     public List<Product> supplierProducts(String supplier) throws SQLException {
         List<Product> products = new ArrayList<>();
 
-        String SQLQuery = "SELECT sc.quantity, code, name, description, category, photo FROM dbtest.products INNER JOIN supplier_catalogue sc on products.code = sc.product";
+        String SQLQuery = "SELECT sc.quantity, code, name, description, category, photo, price FROM dbtest.products INNER JOIN supplier_catalogue sc on products.code = sc.product WHERE supplier LIKE ?";
 
         try (PreparedStatement statement = connection.prepareStatement(SQLQuery);
-             ResultSet resultSet = statement.executeQuery();
         ) {
+            statement.setString(1, supplier);
+            ResultSet resultSet = statement.executeQuery();
+
             while (resultSet.next()) {
-                Product product = new Product(resultSet.getInt("code"), resultSet.getInt("quantity"), resultSet.getString("name"), resultSet.getString("description"), resultSet.getString("category"), resultSet.getString("photo"));
+                Product product = new Product(resultSet.getInt("code"), resultSet.getInt("quantity"), resultSet.getString("name"), resultSet.getString("description"), resultSet.getString("category"), resultSet.getString("photo"), resultSet.getFloat("price"));
                 products.add(product);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
 
         return products;
@@ -76,9 +71,9 @@ public class ProductDAO {
         return returnValue;
     }
 
-    public void createProduct(int code, String name, String description, String category, String photoPath, int quantity, String supplier) throws SQLException {
+    public void createProduct(int code, String name, String description, String category, String photoPath, int quantity, String supplier, float price) throws SQLException {
         String query = "INSERT into dbtest.products (code, name, description, category, photo) VALUES(?, ?, ?, ?, ?)";
-        String query2 = "INSERT into dbtest.supplier_catalogue (product, supplier, quantity) VALUES (?, ?, ?)";
+        String query2 = "INSERT into dbtest.supplier_catalogue (product, supplier, quantity, price) VALUES (?, ?, ?, ?)";
 
 
         try (PreparedStatement pstatement = connection.prepareStatement(query); PreparedStatement pstatement2 = connection.prepareStatement(query2)) {
@@ -92,6 +87,7 @@ public class ProductDAO {
             pstatement2.setInt(1, code);
             pstatement2.setString(2, supplier);
             pstatement2.setInt(3, quantity);
+            pstatement2.setFloat(4, price);
             pstatement2.executeUpdate();
 
 

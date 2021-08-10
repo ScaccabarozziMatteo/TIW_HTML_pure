@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<html lang="it" xmlns:th="http://www.thymeleaf.org/">
 <head>
-    <meta charset="UTF-8">
+
     <title>CompraMI</title>
     <link rel="icon" href="./templates/favicon.ico" type="image/x-icon"/>
     <link rel="shortcut icon" href="./templates/favicon.ico" type="image/x-icon"/>
@@ -23,6 +23,8 @@
     <label for="categoryProduct">Categoria:</label><br>
     <input type="text" class="inputInsertProd" maxlength="45" id="categoryProduct" name="categoryProduct" required><br>
     <label for="quantityProduct">Quantità:</label><br>
+    <input type="number" class="inputInsertProd" id="priceProduct" name="priceProduct" required><br>
+    <label for="priceProduct">Prezzo:</label><br>
     <input type="number" class="inputInsertProd" id="quantityProduct" name="quantityProduct" required><br>
     <label for="descriptionProd">Descrizione:</label><br>
     <textarea class="inputInsertProdDescr" cols="40" rows="5" maxlength="300" id="descriptionProd" name="descriptionProd" required></textarea><br>
@@ -66,16 +68,16 @@
 <div class="shipmentPolicies">
     <h3>Politiche di spedizioni presenti</h3>
     <table>
-        <tr><td>Da</td><td>A</td><td>Prezzo di spedizione</td></tr>
+        <tr><th>Da</th><th>A</th><th>Prezzo di spedizione</th></tr>
         <tr th:each="shipmentPolicy: ${shipmentPolicies}"><td th:if="${shipmentPolicy.min_articles} > 0 and ${shipmentPolicy.min_articles} != 999999999" th:text="${shipmentPolicy.min_articles}"></td><td th:if="${shipmentPolicy.freeShipment} > 0" th:text="${shipmentPolicy.freeShipment}"></td><td th:if="${shipmentPolicy.min_articles} > 0 and ${shipmentPolicy.min_articles} != 999999999" th:text="${shipmentPolicy.max_articles}"><td th:if="${shipmentPolicy.min_articles} == 999999999"></td><td th:text="${#numbers.formatCurrency(shipmentPolicy.costShipment)}"></td></tr>
     </table>
 </div>
 
 <div class="supplierGoods">
-    <h3>Articoli in magazzino</h3>
+    <h3>Articoli in magazzino€</h3>
     <table>
-        <tr><td>Codice</td><td>Nome</td><td>Descrizione</td><td>Categoria</td><td>Quantità</td><td>Foto</td></tr>
-        <tr th:each="product: ${allProducts}"><td th:text="${product.code}"></td><td th:text="${product.name}"></td><td th:text="${product.description}"><td th:text="${product.category}"></td><td th:text="${product.quantity}"></td><td><img th:src="@{'/upload/' + ${product.image}}" height="100" alt="imageProduct"/></td></tr>
+        <tr><th>Codice</th><th>Nome</th><th>Descrizione</th><th>Categoria</th><th>Quantità</th><th>Prezzo</th><th>Foto</th></tr>
+        <tr th:each="product: ${allProducts}"><td th:text="${product.code}"></td><td th:text="${product.name}"></td><td th:text="${product.description}"><td th:text="${product.category}"></td><td th:text="${product.quantity}"></td><td th:text="${#numbers.formatCurrency(product.price)}"></td><td><img th:src="@{'/upload/' + ${product.image}}" height="100" alt="imageProduct"/></td></tr>
     </table>
 </div>
 

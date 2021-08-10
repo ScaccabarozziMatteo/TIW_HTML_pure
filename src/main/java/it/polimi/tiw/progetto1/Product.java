@@ -17,6 +17,7 @@ public class Product implements Serializable {
     private String description;
     private String category;
     private String image;
+    private float price;
 
     public Product(int code, String name, String description, String category, String image) throws IOException {
         this.code = code;
@@ -26,13 +27,14 @@ public class Product implements Serializable {
         this.image = image;
     }
 
-    public Product(int code, int quantity, String name, String description, String category, String image) throws SQLException, IOException {
+    public Product(int code, int quantity, String name, String description, String category, String image, float price) {
         this.code = code;
         this.quantity = quantity;
         this.name = name;
         this.description = description;
         this.category = category;
         this.image = image;
+        this.price = price;
     }
 
     public int getCode() {
@@ -57,6 +59,10 @@ public class Product implements Serializable {
 
     public String getImage() {
         return image;
+    }
+
+    public float getPrice() {
+        return price;
     }
 
 }

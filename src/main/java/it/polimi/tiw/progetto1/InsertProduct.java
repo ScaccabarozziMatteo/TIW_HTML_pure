@@ -50,6 +50,7 @@ public class InsertProduct extends HttpServlet {
         String nameProduct, categoryProduct, descriptionProduct, photoName = null, photoExtension, photoPath;
         Part photoPart;
         int codeProduct = -1, quantity;
+        float price = 0;
 
         nameProduct = request.getParameter("nameProduct");
         categoryProduct = request.getParameter("categoryProduct");
@@ -63,6 +64,7 @@ public class InsertProduct extends HttpServlet {
         try {
             codeProduct = Integer.parseInt(request.getParameter("code"));
             quantity = Integer.parseInt(request.getParameter("quantityProduct"));
+            price = Float.parseFloat(request.getParameter("priceProduct"));
         }
         catch (NumberFormatException e) {
             quantity = 0;
@@ -71,7 +73,7 @@ public class InsertProduct extends HttpServlet {
         if (nameProduct != null && !nameProduct.equals("") && descriptionProduct != null && !descriptionProduct.equals("") && categoryProduct != null && !categoryProduct.equals("") && !photoName.equals("")) {
             ProductDAO productDAO = new ProductDAO(connection);
 
-            if (quantity != 0 && nameProduct.length() < 46 && descriptionProduct.length() < 301 && categoryProduct.length() < 46) {
+            if (price > 0 && quantity != 0 && nameProduct.length() < 46 && descriptionProduct.length() < 301 && categoryProduct.length() < 46) {
 
                 try {
                     if (productDAO.ifExistsProduct(codeProduct)) {
@@ -102,7 +104,7 @@ public class InsertProduct extends HttpServlet {
                         bufferedOutputStream.close();
 
 
-                        productDAO.createProduct(codeProduct, nameProduct, descriptionProduct, categoryProduct, photoName, quantity, supplierCode);
+                        productDAO.createProduct(codeProduct, nameProduct, descriptionProduct, categoryProduct, photoName, quantity, supplierCode, price);
                         session.getServletContext().setAttribute("codeResult", 1);
                         response.sendRedirect("PersonalAreaSupplier");
 
