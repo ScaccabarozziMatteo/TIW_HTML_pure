@@ -25,10 +25,6 @@ public class DeleteCookie extends HttpServlet {
             request.getSession().invalidate();
             response.sendRedirect("index.html");
 
-
-            System.out.println("All cookies have been deleted!");
-        } else {
-            System.out.println("No cookies found");
         }
     }
 }
