@@ -1,5 +1,9 @@
 package it.polimi.tiw.progetto1.Controllers;
 
+import it.polimi.tiw.progetto1.Beans.Product;
+import it.polimi.tiw.progetto1.DAO.ProductDAO;
+import org.thymeleaf.context.WebContext;
+
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
@@ -7,6 +11,8 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 @WebServlet(name = "SearchProduct", value = "/SearchProduct")
 public class SearchProduct extends HttpServlet {
@@ -33,13 +39,28 @@ public class SearchProduct extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession();
+        String nameProduct = request.getParameter("search");
 
-        String idCustomer = session.
-    }
+        if (nameProduct != null && !nameProduct.equals("")) {
+            ProductDAO productDAO = new ProductDAO(connection);
+            List<Product> products;
+            try {
+                products = productDAO.getProductsFromSearchTab(nameProduct);
+                ServletContext servletContext = getServletContext();
 
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+                servletContext.setAttribute("showProducts",2);
 
+                servletContext.setAttribute("searchedProducts",products);
+
+                response.sendRedirect("PersonalAreaCustomer");
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+
+
+        }
     }
 }
+
+
+

@@ -16,6 +16,14 @@
     <span th:text="${session.name}"></span>
 </h1>
 
+<div th:if="${showProducts == 2}">
+<table>
+    <tr><th>Codice</th><th>Nome</th><th>Prezzo</th>
+    <tr th:each="prod: ${searchedProducts}"><td th:text="${prod.code}"></td><td th:text="${prod.name}"></td><td th:text="${#numbers.formatCurrency(prod.price)}"></td></tr>
+</table>
+
+</div>
+
 
 
 <footer th:insert="templates/template1 :: footer"></footer>

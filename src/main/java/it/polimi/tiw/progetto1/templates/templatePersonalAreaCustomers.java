@@ -36,6 +36,9 @@ import java.io.IOException;
                 String path = "/WEB-INF/AreaPersonaleCliente";
                 ServletContext servletContext = getServletContext();
                 final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+                ctx.setVariable("searchedProducts",servletContext.getAttribute("searchedProducts"));
+                ctx.setVariable("showProducts", servletContext.getAttribute("showProducts"));
+
                 templateEngine.process(path, ctx, response.getWriter());
             }
             else {
