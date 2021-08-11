@@ -37,7 +37,11 @@ import java.io.IOException;
                 ServletContext servletContext = getServletContext();
                 final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
                 String id = request.getParameter("id");
-                ctx.setVariable("searchedProducts", servletContext.getAttribute("searchedProducts"));
+
+                if (id == null || !id.equals("2") )
+                    servletContext.removeAttribute("searchedProducts");
+
+                ctx.setVariable("searchedProducts",servletContext.getAttribute("searchedProducts"));
                 ctx.setVariable("showProducts", id);
 
                 templateEngine.process(path, ctx, response.getWriter());
