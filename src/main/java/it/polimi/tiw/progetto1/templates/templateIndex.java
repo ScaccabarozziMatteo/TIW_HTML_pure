@@ -31,16 +31,21 @@ public class templateIndex extends HttpServlet {
         String path = "/index";
         ServletContext servletContext = getServletContext();
         final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-
-        ctx.setVariable("errorNoCredential", servletContext.getAttribute("errorNoCredential"));
-        ctx.setVariable("errorLoginSupplier", servletContext.getAttribute("errorLoginSupplier"));
-        ctx.setVariable("errorLoginCustomer", servletContext.getAttribute("errorLoginCustomer"));
-        templateEngine.process(path, ctx, response.getWriter());
-        ctx.removeVariable("errorNoCredential");
-        ctx.removeVariable("errorLoginSupplier");
-        ctx.removeVariable("errorLoginCustomer");
-        servletContext.removeAttribute("errorNoCredential");
-        servletContext.removeAttribute("errorLoginSupplier");
-        servletContext.removeAttribute("errorLoginCustomer");
+        if (request.getSession().getAttribute("login") != null)
+            response.sendRedirect("PersonalAreaCustomer");
+        else if (request.getSession().getAttribute("supplierCode") != null)
+            response.sendRedirect("PersonalAreaSupplier");
+        else {
+            ctx.setVariable("errorNoCredential", servletContext.getAttribute("errorNoCredential"));
+            ctx.setVariable("errorLoginSupplier", servletContext.getAttribute("errorLoginSupplier"));
+            ctx.setVariable("errorLoginCustomer", servletContext.getAttribute("errorLoginCustomer"));
+            templateEngine.process(path, ctx, response.getWriter());
+            ctx.removeVariable("errorNoCredential");
+            ctx.removeVariable("errorLoginSupplier");
+            ctx.removeVariable("errorLoginCustomer");
+            servletContext.removeAttribute("errorNoCredential");
+            servletContext.removeAttribute("errorLoginSupplier");
+            servletContext.removeAttribute("errorLoginCustomer");
+        }
     }
 }
