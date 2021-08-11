@@ -1,4 +1,4 @@
-package it.polimi.tiw.progetto1;
+package it.polimi.tiw.progetto1.Controllers;
 
 import it.polimi.tiw.progetto1.DAO.ProductDAO;
 

@@ -1,6 +1,6 @@
 package it.polimi.tiw.progetto1.DAO;
 
-import it.polimi.tiw.progetto1.Customer;
+import it.polimi.tiw.progetto1.Beans.Customer;
 
 
 import java.sql.Connection;

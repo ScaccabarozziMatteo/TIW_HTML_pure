@@ -1,4 +1,4 @@
-package it.polimi.tiw.progetto1;
+package it.polimi.tiw.progetto1.Beans;
 
 import java.io.Serializable;
 

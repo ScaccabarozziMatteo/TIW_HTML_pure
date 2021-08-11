@@ -1,6 +1,6 @@
 package it.polimi.tiw.progetto1.DAO;
 
-import it.polimi.tiw.progetto1.Product;
+import it.polimi.tiw.progetto1.Beans.Product;
 
 import java.io.IOException;
 import java.sql.Connection;

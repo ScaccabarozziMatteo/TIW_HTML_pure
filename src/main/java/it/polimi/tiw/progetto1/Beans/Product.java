@@ -1,4 +1,4 @@
-package it.polimi.tiw.progetto1;
+package it.polimi.tiw.progetto1.Beans;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

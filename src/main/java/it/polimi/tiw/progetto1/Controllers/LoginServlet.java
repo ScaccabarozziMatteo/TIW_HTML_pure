@@ -1,11 +1,9 @@
-package it.polimi.tiw.progetto1;
+package it.polimi.tiw.progetto1.Controllers;
 
+import it.polimi.tiw.progetto1.Beans.Customer;
+import it.polimi.tiw.progetto1.Beans.Supplier;
 import it.polimi.tiw.progetto1.DAO.CustomerDAO;
 import it.polimi.tiw.progetto1.DAO.SupplierDAO;
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.WebContext;
-import org.thymeleaf.templatemode.TemplateMode;
-import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import java.io.*;
 import java.sql.*;

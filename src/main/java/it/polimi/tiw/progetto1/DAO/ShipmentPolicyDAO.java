@@ -1,6 +1,6 @@
 package it.polimi.tiw.progetto1.DAO;
 
-import it.polimi.tiw.progetto1.ShipmentPolicy;
+import it.polimi.tiw.progetto1.Beans.ShipmentPolicy;
 
 
 import java.sql.Connection;
