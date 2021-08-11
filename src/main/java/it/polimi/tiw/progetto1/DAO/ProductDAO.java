@@ -141,7 +141,7 @@ public class ProductDAO {
     }
 
     public List<Product> getObservedProducts(String supplier, HttpServletRequest request) {
-        List<Product> products;
+        List<Product> products = null;
 
         Cookie[] cookies = request.getCookies();
         Cookie cookieProducts = null;
