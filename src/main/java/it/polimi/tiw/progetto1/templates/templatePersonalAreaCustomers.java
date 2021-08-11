@@ -21,6 +21,7 @@ import java.io.IOException;
             ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver(servletContext);
             templateResolver.setTemplateMode(TemplateMode.HTML);
             templateResolver.setSuffix(".html");
+            templateResolver.setCharacterEncoding("UTF-8");
             this.templateEngine = new TemplateEngine();
             this.templateEngine.setTemplateResolver(templateResolver);
         }
@@ -37,6 +38,8 @@ import java.io.IOException;
                 ServletContext servletContext = getServletContext();
                 final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
                 String id = request.getParameter("id");
+                if (id == null || !id.equals("2"))
+                    servletContext.removeAttribute("searchedProducts");
                 ctx.setVariable("searchedProducts", servletContext.getAttribute("searchedProducts"));
                 ctx.setVariable("showProducts", id);
 

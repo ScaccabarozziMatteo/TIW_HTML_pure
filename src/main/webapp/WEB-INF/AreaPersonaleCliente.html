@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
 <head>
-    <meta charset="UTF-8">
     <title>CompraMI</title>
     <link rel="icon" href="./templates/favicon.ico" type="image/x-icon"/>
     <link rel="shortcut icon" href="./templates/favicon.ico" type="image/x-icon"/>
@@ -19,7 +18,9 @@
 <div th:if="${showProducts == 2}">
 <table>
     <tr><th>Codice</th><th>Nome</th><th>Prezzo</th>
+    <button id="collapsible_menu">
     <tr th:each="prod: ${searchedProducts}"><td th:text="${prod.code}"></td><td th:text="${prod.name}"></td><td th:text="${#numbers.formatCurrency(prod.price)}"></td></tr>
+    </input>
 </table>
 
 </div>
