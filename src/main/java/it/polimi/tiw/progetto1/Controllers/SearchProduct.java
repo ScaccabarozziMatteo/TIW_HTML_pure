@@ -47,12 +47,8 @@ public class SearchProduct extends HttpServlet {
             try {
                 products = productDAO.getProductsFromSearchTab(nameProduct);
                 ServletContext servletContext = getServletContext();
-
-                servletContext.setAttribute("showProducts",2);
-
                 servletContext.setAttribute("searchedProducts",products);
-
-                response.sendRedirect("PersonalAreaCustomer");
+                response.sendRedirect("PersonalAreaCustomer?id=2");
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
