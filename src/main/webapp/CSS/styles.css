@@ -79,6 +79,10 @@
     color: red;
 }
 
+.details_button{
+    float: right;
+}
+
 
 #navigation-container {
     width: 1200px;

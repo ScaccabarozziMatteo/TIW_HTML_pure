@@ -18,12 +18,40 @@
 <div th:if="${showProducts == 2}">
 <table>
     <tr><th>Codice</th><th>Nome</th><th>Prezzo</th>
-    <tr th:each="prod: ${searchedProducts}">
-        <td th:text="${prod.code}"></td><td th:text="${prod.name}"></td><td th:text="${#numbers.formatCurrency(prod.price)}"></td>
-</tr>
+
+
+    <tr  th:each="prod: ${searchedProducts}">
+
+    <td th:text="${prod.code}"></td><td th:text="${prod.name}"></td><td><span th:text="${#numbers.formatCurrency(prod.price)}"></span>
+    <button>    <label class="details_button" for="my_checkbox"> Dettagli</label> </button>
+</td>
+
+    </tr>
+
+
 </table>
 
 </div>
+
+
+<input type="checkbox" id="my_checkbox" style="display:none;">
+<div id="hidden">ciao ciao</div>
+
+
+<style> #hidden {
+    display: none;
+    height: 100px;
+    background: red;
+}
+:checked + #hidden {
+    display: block;
+}
+</style>
+
+
+
+
+
 
 
 

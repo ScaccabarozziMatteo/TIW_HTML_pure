@@ -21,7 +21,7 @@ public class DeleteCookie extends HttpServlet {
                 aCookie.setMaxAge(0);
                 response.addCookie(aCookie);
             }
-
+            getServletContext().setAttribute("showProducts",1);
             request.getSession().invalidate();
             response.sendRedirect("index.html");
 
