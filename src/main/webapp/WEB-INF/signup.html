@@ -12,8 +12,10 @@
 
 <h2>Inserisci tutti i tuoi dati nel form:</h2>
 
-<div th:if="${form == 1}" th:insert="templates/template1 :: signupCustomer"></div>
-<div th:if="${form == 2}" th:insert="templates/template1 :: signupSupplier"></div>
+<div style="overflow: hidden; padding: 20px">
+    <div th:if="${form == 1}" th:insert="templates/template1 :: signupCustomer"></div>
+    <div th:if="${form == 2}" th:insert="templates/template1 :: signupSupplier"></div>
+</div>
 
 <footer th:insert="templates/template1 :: footer"></footer>
 </body>

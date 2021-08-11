@@ -1,7 +1,6 @@
 package it.polimi.tiw.progetto1;
 
 import it.polimi.tiw.progetto1.DAO.ProductDAO;
-import org.apache.commons.io.FileUtils;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
