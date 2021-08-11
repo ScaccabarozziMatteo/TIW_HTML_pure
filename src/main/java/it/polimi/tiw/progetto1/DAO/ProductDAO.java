@@ -2,6 +2,9 @@ package it.polimi.tiw.progetto1.DAO;
 
 import it.polimi.tiw.progetto1.Beans.Product;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -116,6 +119,20 @@ public class ProductDAO {
             pstatement2.executeUpdate();
 
         }
+    }
+
+    public List<Product> getObservedProducts(String supplier, HttpServletRequest request) {
+        List<Product> products;
+
+        Cookie[] cookies = request.getCookies();
+        Cookie cookieProducts = null;
+        
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("observedProducts"))
+                cookie = cookieProducts;
+        }
+
+        return products;
     }
 
 }
