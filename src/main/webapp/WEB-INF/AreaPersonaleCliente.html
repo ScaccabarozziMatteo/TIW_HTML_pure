@@ -16,43 +16,46 @@
 </h1>
 
 <div th:if="${showProducts == 2}">
-<table>
-    <tr><th>Codice</th><th>Nome</th><th>Prezzo</th>
 
 
-    <tr  th:each="prod: ${searchedProducts}">
+    <table>
+        <tr>
+            <th>Codice</th>
+            <th>Nome</th>
+            <th>Prezzo</th>
+        </tr>
 
-    <td th:text="${prod.code}"></td><td th:text="${prod.name}"></td><td><span th:text="${#numbers.formatCurrency(prod.price)}"></span>
-    <button>    <label class="details_button" for="my_checkbox"> Dettagli</label> </button>
-</td>
-
-    </tr>
-
-
-</table>
+        <th:block th:each="prod: ${searchedProducts}">
+            <tr>
+                <td th:text="${prod.code}"></td>
+                <td th:text="${prod.name}"></td>
+                <td><span th:text="${#numbers.formatCurrency(prod.price)}"></span>
+                    <button>
+                        <label class="details_button" th:for="${prod.code}">
+                        <input type="checkbox" th:id="${prod.code}" style="display:none;" />
+                            Dettagli</label>
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <label th:for="${prod.code}">
+                <td colspan="3" th:id="${prod.code}" th:text="${prod.description}"></td>
+                </label>
+            </tr>
+        </th:block>
+    </table>
 
 </div>
 
 
-<input type="checkbox" id="my_checkbox" style="display:none;">
-<div id="hidden">ciao ciao</div>
-
-
-<style> #hidden {
+<style>
+    #hidden {
     display: none;
-    height: 100px;
-    background: red;
 }
 :checked + #hidden {
     display: block;
 }
 </style>
-
-
-
-
-
-
 
 
 <footer th:insert="templates/template1 :: footer"></footer>
