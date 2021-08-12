@@ -27,7 +27,25 @@ public class ShipmentPolicyDAO {
             ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
-                ShipmentPolicy shipmentPolicy = new ShipmentPolicy(resultSet.getInt("id"), resultSet.getInt("min_articles"), resultSet.getInt("max_articles"), resultSet.getString("supplier"), resultSet.getInt("cost_shipment"), resultSet.getInt("free_shipment"));
+                ShipmentPolicy shipmentPolicy = new ShipmentPolicy(resultSet.getInt("id"), resultSet.getInt("min_articles"), resultSet.getInt("max_articles"), resultSet.getString("supplier"), resultSet.getFloat("cost_shipment"), resultSet.getFloat("free_shipment"));
+                shipmentPolicies.add(shipmentPolicy);
+            }
+        }
+
+        return shipmentPolicies;
+    }
+
+    public List<ShipmentPolicy> shipmentPoliciesProduct(int prodCode) throws SQLException {
+        List<ShipmentPolicy> shipmentPolicies = new ArrayList<>();
+
+        String SQLQuery = "SELECT * FROM dbtest.shipment_policy INNER JOIN supplier_catalogue sc on shipment_policy.supplier = sc.supplier WHERE product LIKE ? ORDER BY sc.supplier, min_articles";
+
+        try (PreparedStatement statement = connection.prepareStatement(SQLQuery)) {
+            statement.setInt(1, prodCode);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                ShipmentPolicy shipmentPolicy = new ShipmentPolicy(resultSet.getInt("id"), resultSet.getInt("min_articles"), resultSet.getInt("max_articles"), resultSet.getString("sc.supplier"), resultSet.getInt("cost_shipment"), resultSet.getInt("free_shipment"));
                 shipmentPolicies.add(shipmentPolicy);
             }
         }
@@ -49,12 +67,12 @@ public class ShipmentPolicyDAO {
         }
     }
 
-    public void createShipPolicy(String supplier, int freeShipment) throws SQLException {
+    public void createShipPolicy(String supplier, float freeShipment) throws SQLException {
         String query = "INSERT into dbtest.shipment_policy (supplier, free_shipment) VALUES(?, ?)";
         try (PreparedStatement pstatement = connection.prepareStatement(query);) {
 
             pstatement.setString(1, supplier);
-            pstatement.setInt(2, freeShipment);
+            pstatement.setFloat(2, freeShipment);
 
             pstatement.executeUpdate();
         }
@@ -85,14 +103,14 @@ public class ShipmentPolicyDAO {
         return returnValue;
     }
 
-    public boolean checkIfExistPolicy(String supplier, int quantityFreeShipment) throws SQLException {
+    public boolean checkIfExistPolicy(String supplier, float priceFreeShipment) throws SQLException {
         String query = "SELECT * FROM shipment_policy WHERE supplier LIKE ? AND (max_articles >= ? OR NOT(free_shipment LIKE NULL))";
         ResultSet resultSet;
         boolean returnValue;
         try (PreparedStatement pstatement = connection.prepareStatement(query);) {
 
             pstatement.setString(1, supplier);
-            pstatement.setInt(2, quantityFreeShipment);
+            pstatement.setFloat(2, priceFreeShipment);
 
             resultSet = pstatement.executeQuery();
             returnValue = resultSet.next();

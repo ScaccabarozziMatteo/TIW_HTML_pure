@@ -47,8 +47,8 @@ public class InsertShipmentPolicy extends HttpServlet {
 
             ShipmentPolicyDAO shipmentPolicyDAO = new ShipmentPolicyDAO(connection);
 
-            int minArticles, maxArticles, quantityFreeShipment;
-            float shipmentPrice;
+            int minArticles, maxArticles;
+            float shipmentPrice, priceFreeShipment;
 
             try {
                 minArticles = Integer.parseInt(request.getParameter("minArticles"));
@@ -61,14 +61,14 @@ public class InsertShipmentPolicy extends HttpServlet {
             }
 
             try {
-                quantityFreeShipment = Integer.parseInt(request.getParameter("quantityFreeShipment"));
+                priceFreeShipment = Float.parseFloat(request.getParameter("priceFreeShipment"));
             } catch (NumberFormatException e) {
-                quantityFreeShipment = -1;
+                priceFreeShipment = -1;
             }
 
             try {
 
-                if (minArticles > 0 && maxArticles > 0 && shipmentPrice > 0 && quantityFreeShipment == -1 && minArticles <= maxArticles) {
+                if (minArticles > 0 && maxArticles > 0 && shipmentPrice > 0 && priceFreeShipment == -1 && minArticles <= maxArticles) {
                     // Insert shipment policy among 2 articles
 
                     if (!shipmentPolicyDAO.checkIfExistPolicy(supplierCode, minArticles, maxArticles)) {
@@ -82,12 +82,12 @@ public class InsertShipmentPolicy extends HttpServlet {
                         response.sendRedirect("PersonalAreaSupplier");
                     }
 
-                } else if (minArticles == -1 && maxArticles == -1 && shipmentPrice == -1 && quantityFreeShipment > 0 && minArticles <= maxArticles) {
+                } else if (minArticles == -1 && maxArticles == -1 && shipmentPrice == -1 && priceFreeShipment > 0 && minArticles <= maxArticles) {
                     // Insert free shipment policy
 
 
-                    if (!shipmentPolicyDAO.checkIfExistPolicy(supplierCode, quantityFreeShipment)) {
-                        shipmentPolicyDAO.createShipPolicy(supplierCode, quantityFreeShipment);
+                    if (!shipmentPolicyDAO.checkIfExistPolicy(supplierCode, priceFreeShipment)) {
+                        shipmentPolicyDAO.createShipPolicy(supplierCode, priceFreeShipment);
                         session.getServletContext().setAttribute("codeResult", 5);
                         response.sendRedirect("PersonalAreaSupplier");
                     } else {

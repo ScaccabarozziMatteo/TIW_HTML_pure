@@ -53,6 +53,28 @@ public class SupplierDAO {
         return supplier;
     }
 
+    public List<Supplier> getInfoSuppliersShipment(int codeProd) throws SQLException {
+        List<Supplier> suppliers = new ArrayList<>();
+
+        String SQLQuery = "SELECT * FROM dbtest.suppliers INNER JOIN dbtest.supplier_catalogue ON suppliers.code = supplier_catalogue.supplier INNER JOIN shipment_policy sp ON suppliers.code = sp.supplier WHERE supplier_catalogue.product LIKE ? GROUP BY sp.supplier";
+
+
+        try (PreparedStatement statement = connection.prepareStatement(SQLQuery))
+             {
+
+            statement.setInt(1, codeProd);
+            ResultSet resultSet = statement.executeQuery();
+
+
+            while (resultSet.next()) {
+                Supplier supplier = new Supplier(resultSet.getString("code"), resultSet.getString("name"), resultSet.getInt("evaluation"), resultSet.getFloat("free_shipment"), resultSet.getFloat("price"));
+                suppliers.add(supplier);
+            }
+        }
+
+        return suppliers;
+    }
+
     public void createSupplier(String code, String name, String password) throws SQLException {
         String query = "INSERT into dbtest.suppliers (code, name, password, evaluation) VALUES(?, ?, ?, ?)";
         try (PreparedStatement pstatement = connection.prepareStatement(query);) {

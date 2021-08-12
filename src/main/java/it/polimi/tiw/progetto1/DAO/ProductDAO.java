@@ -39,7 +39,7 @@ public class ProductDAO {
         return products;
     }
 
-    public List<Product> getProductsFromSearchTab(String nameProduct) throws SQLException, IOException {
+    public List<Product> getProductsFromSearchTab(String nameProduct) throws SQLException {
 
         List <Product> products = new ArrayList<>();
         String SQLQuery = "SELECT * FROM dbtest.products  INNER JOIN dbtest.supplier_catalogue on products.code = supplier_catalogue.product  WHERE UPPER(name) LIKE ? OR UPPER(description) LIKE ? ORDER BY price  ";
@@ -57,11 +57,29 @@ public class ProductDAO {
         return products;
     }
 
+    public Product getInfoProduct(int code) throws SQLException, IOException {
+        Product product = null;
+
+        String SQLQuery = "SELECT * FROM dbtest.products WHERE products.code LIKE ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(SQLQuery);
+        ) {
+            statement.setInt(1, code);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                product = new Product(resultSet.getInt("code"), resultSet.getString("name"), resultSet.getString("description"), resultSet.getString("category"), resultSet.getString("photo"));
+            }
+        }
+
+        return product;
+    }
+
 
     public List<Product> supplierProducts(String supplier) throws SQLException {
         List<Product> products = new ArrayList<>();
 
-        String SQLQuery = "SELECT sc.quantity, code, name, description, category, photo, price FROM dbtest.products INNER JOIN supplier_catalogue sc on products.code = sc.product WHERE supplier LIKE ?";
+        String SQLQuery = "SELECT sc.quantity, code, name, description, category, photo, price FROM dbtest.products INNER JOIN supplier_catalogue sc ON products.code = sc.product WHERE supplier LIKE ?";
 
         try (PreparedStatement statement = connection.prepareStatement(SQLQuery);
         ) {

@@ -52,6 +52,12 @@
             <artifactId>thymeleaf</artifactId>
             <version>3.0.12.RELEASE</version>
         </dependency>
+        <!-- JSON -->
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20171018</version>
+        </dependency>
     </dependencies>
 
     <build>

@@ -29,7 +29,7 @@
             <td th:text="${prod.name}"></td>
             <td th:text="${#numbers.formatCurrency(prod.price)}"></td>
             <td>
-                <a th:href="'PersonalAreaCustomer?id=3&code='+${prod.code}"><button>Dettagli</button></a>
+                <a th:href="'PersonalAreaCustomer?id=3&codeProd='+${prod.code}"><button>Dettagli</button></a>
             </td>
         </tr>
     </table>
@@ -37,10 +37,63 @@
 </div>
 
 <div th:if="${showProducts == 3}">
+<div>
+    <h3>Informazioni dettagliate sull'articolo selezionato</h3>
+
+    <table>
+        <tr>
+            <th>Codice</th>
+            <th>Nome</th>
+            <th>Descrizione</th>
+            <th>Categoria</th>
+            <th>Foto</th>
+        </tr>
+        <tr>
+            <td th:text="${product.code}"></td>
+            <td th:text="${product.name}"></td>
+            <td th:text="${product.description}"></td>
+            <td th:text="${product.category}"></td>
+            <td><img th:src="@{'/upload/' + ${product.image}}" height="100" alt="imageProduct"/></td>
+        </tr>
+    </table>
+</div>
+    <div>
+        <h3>Informazioni sui fornitori che vendono il prodotto selezionato</h3>
+        <table>
+            <tr>
+                <th>Nome</th>
+                <th>Valutazione</th>
+                <th>Prezzo prodotto</th>
+                <th>Politiche spedizione</th>
+                <th># prodotti del fornitore nel carrello</th>
+            </tr>
+            <tr th:each="supplier: ${listSuppliers}">
+                <td th:text="${supplier.name}"></td>
+                <td th:text="${#numbers.formatInteger(supplier.evaluation, 1)}"></td>
+                <td th:text="${#numbers.formatCurrency(supplier.priceProd)}"></td>
+                <td>
+                    <details>
+                        <summary>Espandi</summary>
+                        <div th:each="shipPolicy: ${shipmentPolicies}"
+                             th:if="${shipPolicy.supplier} == ${supplier.code}">
+                            <div th:if="${shipPolicy.min_articles} != 999999999">
+                                Da <span th:text="${shipPolicy.min_articles}"></span> a <span
+                                    th:text="${shipPolicy.max_articles}"></span> articoli <span th:text="${#numbers.formatCurrency(shipPolicy.costShipment)}"></span>
+                            </div>
+                                <div th:if="${shipPolicy.min_articles} == 999999999">
+                                    Spedizione gratuita da <span
+                                        th:text="${#numbers.formatCurrency(shipPolicy.freeShipment)}"></span>
+                                </div>
+                            </div>
+                    </details>
+                </td>
+                <td th:text="${supplier.name}"></td>
+            </tr>
 
 
+        </table>
 
-
+    </div>
 
 
 </div>

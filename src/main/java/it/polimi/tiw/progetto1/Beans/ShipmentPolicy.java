@@ -10,9 +10,9 @@ public class ShipmentPolicy implements Serializable {
     private int max_articles;
     private String supplier;
     private float costShipment;
-    private int freeShipment;
+    private float freeShipment;
 
-    public ShipmentPolicy(int id, int min_articles, int max_articles, String supplier, float costShipment, int freeShipment) {
+    public ShipmentPolicy(int id, int min_articles, int max_articles, String supplier, float costShipment, float freeShipment) {
         this.id = id;
         this.min_articles = min_articles;
         this.max_articles = max_articles;
@@ -41,7 +41,7 @@ public class ShipmentPolicy implements Serializable {
         return costShipment;
     }
 
-    public int getFreeShipment() {
+    public float getFreeShipment() {
         return freeShipment;
     }
 }
