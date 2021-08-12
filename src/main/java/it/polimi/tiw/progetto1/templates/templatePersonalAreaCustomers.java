@@ -3,7 +3,10 @@ package it.polimi.tiw.progetto1.templates;
 import it.polimi.tiw.progetto1.DAO.ProductDAO;
 import it.polimi.tiw.progetto1.DAO.ShipmentPolicyDAO;
 import it.polimi.tiw.progetto1.DAO.SupplierDAO;
+import org.apache.commons.lang3.StringUtils;
+import org.json.JSONArray;
 import org.json.JSONObject;
+import org.json.Cookie;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
@@ -93,12 +96,12 @@ import java.sql.SQLException;
             }
         }
 
-        protected void addViewedProduct(int codeProd, String username, HttpServletRequest request, HttpServletResponse response) {
-            Cookie[] cookies = request.getCookies();
-            Cookie cookie = null;
+        protected void addViewedProduct(int codeProd, String username, HttpServletRequest request, HttpServletResponse response) throws NullPointerException {
+            javax.servlet.http.Cookie[] cookies = request.getCookies();
+            javax.servlet.http.Cookie cookie = null;
             boolean cookieExist = false;
 
-            for (Cookie cookie1: cookies) {
+            for (javax.servlet.http.Cookie cookie1: cookies) {
                 if (cookie1.getName().equals("viewedProducts")) {
                     cookie = cookie1;
                     cookieExist = true;
@@ -106,14 +109,38 @@ import java.sql.SQLException;
                 }
             }
 
-            if(cookieExist) {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("email", username);
-                jsonObject.put("codeProduct", codeProd);
-                cookie.setValue(jsonObject.toString());
-                System.out.println(jsonObject.toString());
-            } else {
+            JSONArray jsonArray = null;
+            JSONObject jsonObject;
 
+            if(cookieExist) {
+                int i = 0;
+                String stringArray = cookie.getValue();
+                jsonArray = new JSONArray();
+
+                String[] substrings = StringUtils.substringsBetween(stringArray, "{", "}");
+                for (String substring : substrings){
+                    jsonObject = new JSONObject(substring);
+                    if (jsonObject.get("codeProduct")
+                    jsonArray.put(i, jsonObject);
+                    i++;
+                }
+
+
+                int lenght = jsonArray.length();
+
+                JSONObject existingCookie = Cookie.toJSONObject(cookie.toString());
+                existingCookie.get("");
+
+            } else {
+                jsonObject = new JSONObject();
+                jsonArray = new JSONArray();
+                jsonObject.put("username", username);
+                jsonObject.put("codeProduct", codeProd);
+                jsonArray.put(0, jsonObject);
+                String newCookie = jsonArray.toString();
+                response.addCookie(new javax.servlet.http.Cookie("viewedProducts", newCookie));
+
+                System.out.println(newCookie);
 
             }
 
