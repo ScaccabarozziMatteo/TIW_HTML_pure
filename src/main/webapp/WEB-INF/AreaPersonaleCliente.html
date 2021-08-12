@@ -17,45 +17,33 @@
 
 <div th:if="${showProducts == 2}">
 
-
     <table>
         <tr>
             <th>Codice</th>
             <th>Nome</th>
             <th>Prezzo</th>
+            <th>Dettagli</th>
         </tr>
-
-        <th:block th:each="prod: ${searchedProducts}">
-            <tr>
-                <td th:text="${prod.code}"></td>
-                <td th:text="${prod.name}"></td>
-                <td><span th:text="${#numbers.formatCurrency(prod.price)}"></span>
-                    <button>
-                        <label class="details_button" th:for="${prod.code}">
-                        <input type="checkbox" th:id="${prod.code}" style="display:none;" />
-                            Dettagli</label>
-                    </button>
-                </td>
-            </tr>
-            <tr>
-                <label th:for="${prod.code}">
-                <td colspan="3" th:id="${prod.code}" th:text="${prod.description}"></td>
-                </label>
-            </tr>
-        </th:block>
+        <tr th:each="prod: ${searchedProducts}">
+            <td th:text="${prod.code}"></td>
+            <td th:text="${prod.name}"></td>
+            <td th:text="${#numbers.formatCurrency(prod.price)}"></td>
+            <td>
+                <a th:href="'PersonalAreaCustomer?id=3&code='+${prod.code}"><button>Dettagli</button></a>
+            </td>
+        </tr>
     </table>
 
 </div>
 
+<div th:if="${showProducts == 3}">
 
-<style>
-    #hidden {
-    display: none;
-}
-:checked + #hidden {
-    display: block;
-}
-</style>
+
+
+
+
+
+</div>
 
 
 <footer th:insert="templates/template1 :: footer"></footer>
