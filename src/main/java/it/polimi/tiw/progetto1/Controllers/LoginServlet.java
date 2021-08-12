@@ -57,15 +57,9 @@ public class LoginServlet extends HttpServlet {
                 try {
                     Customer customer = customerDAO.getCustomer(emailCustomer, passwordCustomer);
                     if (customer != null) {
-                        Cookie c1 = new Cookie("email", emailCustomer);     //the username and password are encrypted
-                        Cookie c2 = new Cookie("password", passwordCustomer);
-                        c1.setMaxAge(20000);
-                        c2.setMaxAge(20000);
-                        session.setAttribute("login", emailCustomer);
+                        session.setAttribute("emailCustomer", emailCustomer);
                         session.setAttribute("name", customer.getName());
                         session.setAttribute("sex", customer.getSex());
-                        response.addCookie(c1);
-                        response.addCookie(c2); //sends cookies to the browser
                         response.sendRedirect("PersonalAreaCustomer");
                     }
                     else {
@@ -84,14 +78,8 @@ public class LoginServlet extends HttpServlet {
                 try {
                     Supplier supplier = supplierDAO.getSupplier(codeSupplier, passwordSupplier);
                     if (supplier != null) {
-                        Cookie c1 = new Cookie("code", codeSupplier);     //the username and password are encrypted
-                        Cookie c2 = new Cookie("password", passwordSupplier);
-                        c1.setMaxAge(20000);
-                        c2.setMaxAge(20000);
                         session.setAttribute("supplierCode", codeSupplier);
                         session.setAttribute("name", supplier.getName());
-                        response.addCookie(c1);
-                        response.addCookie(c2); //sends cookies to the browser
                         response.sendRedirect("PersonalAreaSupplier");
 
                     }

@@ -3,6 +3,7 @@ package it.polimi.tiw.progetto1.templates;
 import it.polimi.tiw.progetto1.DAO.ProductDAO;
 import it.polimi.tiw.progetto1.DAO.ShipmentPolicyDAO;
 import it.polimi.tiw.progetto1.DAO.SupplierDAO;
+import org.json.JSONObject;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
@@ -57,7 +58,7 @@ import java.sql.SQLException;
         protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, NumberFormatException {
 
             HttpSession session = request.getSession();
-            String strLogin = (String) session.getAttribute("login");
+            String strLogin = (String) session.getAttribute("emailCustomer");
 
             if (strLogin != null) {
 
@@ -70,6 +71,7 @@ import java.sql.SQLException;
                     servletContext.removeAttribute("searchedProducts");
                 else if (id.equals("3")) {
                     int codeProduct = Integer.parseInt(request.getParameter("codeProd"));
+                    addViewedProduct(codeProduct, strLogin, request, response);
                     ProductDAO productDAO = new ProductDAO(connection);
                     SupplierDAO supplierDAO = new SupplierDAO(connection);
                     ShipmentPolicyDAO sPolicyDAO = new ShipmentPolicyDAO(connection);
@@ -89,5 +91,31 @@ import java.sql.SQLException;
             else {
                 response.sendRedirect("index.html");
             }
+        }
+
+        protected void addViewedProduct(int codeProd, String username, HttpServletRequest request, HttpServletResponse response) {
+            Cookie[] cookies = request.getCookies();
+            Cookie cookie = null;
+            boolean cookieExist = false;
+
+            for (Cookie cookie1: cookies) {
+                if (cookie1.getName().equals("viewedProducts")) {
+                    cookie = cookie1;
+                    cookieExist = true;
+                    break;
+                }
+            }
+
+            if(cookieExist) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("email", username);
+                jsonObject.put("codeProduct", codeProd);
+                cookie.setValue(jsonObject.toString());
+                System.out.println(jsonObject.toString());
+            } else {
+
+
+            }
+
         }
     }
