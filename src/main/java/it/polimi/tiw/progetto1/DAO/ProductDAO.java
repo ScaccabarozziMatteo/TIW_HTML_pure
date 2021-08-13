@@ -158,18 +158,4 @@ public class ProductDAO {
         }
     }
 
-    public List<Product> getObservedProducts(String supplier, HttpServletRequest request) {
-        List<Product> products = null;
-
-        Cookie[] cookies = request.getCookies();
-        Cookie cookieProducts = null;
-        
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals("observedProducts"))
-                cookie = cookieProducts;
-        }
-
-        return products;
-    }
-
 }

@@ -15,6 +15,14 @@
     <span th:text="${session.name}"></span>
 </h1>
 
+<div th:if="${showProducts == null}">
+    <table>
+        <tr th:each="product : ${viewedProducts}">
+            <td th:text="${product.name}"></td>
+        </tr>
+    </table>
+</div>
+
 <div th:if="${showProducts == 2}">
 
     <table>
@@ -37,6 +45,7 @@
 </div>
 
 <div th:if="${showProducts == 3}">
+    <a th:href="'PersonalAreaCustomer?id=2'"><button>Torna alla schermata di ricerca</button></a>
 <div>
     <h3>Informazioni dettagliate sull'articolo selezionato</h3>
 

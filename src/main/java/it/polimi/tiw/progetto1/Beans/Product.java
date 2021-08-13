@@ -18,6 +18,7 @@ public class Product implements Serializable {
     private String category;
     private String image;
     private float price;
+    private boolean viewed;
 
     public Product(int code, String name, String description, String category, String image) throws IOException {
         this.code = code;
@@ -71,6 +72,14 @@ public class Product implements Serializable {
 
     public float getPrice() {
         return price;
+    }
+
+    public boolean getViewed() {
+        return viewed;
+    }
+
+    public void setViewed(boolean viewed) {
+        this.viewed = viewed;
     }
 
 }

@@ -55,6 +55,8 @@ public class SearchProduct extends HttpServlet {
 
 
         }
+        else
+            response.sendError(400);
     }
 }
 
