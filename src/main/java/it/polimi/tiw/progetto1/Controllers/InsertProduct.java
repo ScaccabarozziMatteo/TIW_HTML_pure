@@ -75,13 +75,20 @@ public class InsertProduct extends HttpServlet {
             if (price > 0 && quantity != 0 && nameProduct.length() < 46 && descriptionProduct.length() < 301 && categoryProduct.length() < 46) {
 
                 try {
-                    if (productDAO.ifExistsProduct(codeProduct)) {
-                        // update product quantity
+                    if (productDAO.ifExistsProduct(codeProduct) && productDAO.supplierHasProduct(supplierCode, codeProduct)) {
+                        // update product quantity that exists in catalogue
                         productDAO.addQuantityProduct(codeProduct, quantity, supplierCode);
                         session.getServletContext().setAttribute("codeResult", 2);
                         response.sendRedirect("PersonalAreaSupplier");
 
-                    } else {
+                    } else if (productDAO.ifExistsProduct(codeProduct) && !productDAO.supplierHasProduct(supplierCode, codeProduct)) {
+                        // add existing product in catalogue
+
+                        productDAO.addProductInCatalogue(codeProduct, quantity, price, supplierCode);
+                        session.getServletContext().setAttribute("codeResult", 1);
+                        response.sendRedirect("PersonalAreaSupplier");
+                    }
+                    else {
                         // create new product
 
                         InputStream inputStream = photoPart.getInputStream();

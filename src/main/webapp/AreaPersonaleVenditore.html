@@ -67,7 +67,9 @@
 </div>
 <div class="shipmentPolicies">
     <h3>Politiche di spedizioni presenti</h3>
-    <table>
+    <h5 th:if="${shipmentPolicies} == null">Nessuna politica di spedizione presente :(</h5>
+
+    <table th:if="${shipmentPolicies} != null">
         <tr><th>Da</th><th>A</th><th>Prezzo di spedizione</th></tr>
         <tr th:each="shipmentPolicy: ${shipmentPolicies}"><td th:if="${shipmentPolicy.min_articles} > 0 and ${shipmentPolicy.min_articles} != 999999999" th:text="${shipmentPolicy.min_articles}"></td><td th:if="${shipmentPolicy.freeShipment} > 0" th:text="${shipmentPolicy.freeShipment}"></td><td th:if="${shipmentPolicy.min_articles} > 0 and ${shipmentPolicy.min_articles} != 999999999" th:text="${shipmentPolicy.max_articles}"><td th:if="${shipmentPolicy.min_articles} == 999999999"></td><td th:text="${#numbers.formatCurrency(shipmentPolicy.costShipment)}"></td></tr>
     </table>
@@ -75,7 +77,8 @@
 
 <div class="supplierGoods">
     <h3>Articoli in magazzino</h3>
-    <table>
+    <h5 th:if="${allProducts} == null">Nessun articolo in magazzino :(</h5>
+    <table th:if="${allProducts} != null">
         <tr><th>Codice</th><th>Nome</th><th>Descrizione</th><th>Categoria</th><th>Quantità</th><th>Prezzo</th><th>Foto</th></tr>
         <tr th:each="product: ${allProducts}"><td th:text="${product.code}"></td><td th:text="${product.name}"></td><td th:text="${product.description}"><td th:text="${product.category}"></td><td th:text="${product.quantity}"></td><td th:text="${#numbers.formatCurrency(product.price)}"></td><td><img th:src="@{'/upload/' + ${product.image}}" height="100" alt="imageProduct"/></td></tr>
     </table>

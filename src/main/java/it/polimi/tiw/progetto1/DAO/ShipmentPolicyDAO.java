@@ -31,6 +31,8 @@ public class ShipmentPolicyDAO {
                 shipmentPolicies.add(shipmentPolicy);
             }
         }
+        if (shipmentPolicies.isEmpty())
+            return null;
 
         return shipmentPolicies;
     }

@@ -39,6 +39,36 @@ public class ProductDAO {
         return products;
     }
 
+    public void addProductInCatalogue(int codeProd, int quantity, float price, String supplier) throws SQLException {
+        String query = "INSERT into dbtest.supplier_catalogue (price, product, supplier, quantity) VALUES(?, ?, ?, ?)";
+
+        try (PreparedStatement pstatement = connection.prepareStatement(query)) {
+            pstatement.setFloat(1, price);
+            pstatement.setInt(2, codeProd);
+            pstatement.setString(3, supplier);
+            pstatement.setInt(4, quantity);
+            pstatement.executeUpdate();
+
+        }
+    }
+
+    public boolean supplierHasProduct(String supplier, int prodCode) throws SQLException{
+        String Query = "SELECT supplier FROM dbtest.supplier_catalogue WHERE supplier_catalogue.supplier LIKE ? AND product LIKE ?";
+        boolean returnValue = false;
+
+        try (PreparedStatement statement = connection.prepareStatement(Query);) {
+
+            statement.setString(1, supplier);
+            statement.setInt(2, prodCode);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next())
+                if (supplier.equals(resultSet.getString("supplier")))
+                    returnValue = true;
+        }
+        return returnValue;
+    }
+
     public List<Product> getProductsFromSearchTab(String nameProduct) throws SQLException {
 
         List <Product> products = new ArrayList<>();
@@ -91,6 +121,9 @@ public class ProductDAO {
                 products.add(product);
             }
         }
+
+        if (products.isEmpty())
+            return null;
 
         return products;
     }
