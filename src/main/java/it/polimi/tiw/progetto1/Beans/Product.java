@@ -1,12 +1,7 @@
 package it.polimi.tiw.progetto1.Beans;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.Serializable;
-import java.sql.Blob;
-import java.sql.SQLException;
 
 public class Product implements Serializable {
     private static final long serialVersionUID = 5467675345346L;
@@ -18,7 +13,7 @@ public class Product implements Serializable {
     private String category;
     private String image;
     private float price;
-    private boolean viewed;
+    private boolean sale;
 
     public Product(int code, String name, String description, String category, String image) throws IOException {
         this.code = code;
@@ -74,12 +69,12 @@ public class Product implements Serializable {
         return price;
     }
 
-    public boolean getViewed() {
-        return viewed;
+    public boolean getSale() {
+        return sale;
     }
 
-    public void setViewed(boolean viewed) {
-        this.viewed = viewed;
+    public void setSale(boolean sale) {
+        this.sale = sale;
     }
 
 }

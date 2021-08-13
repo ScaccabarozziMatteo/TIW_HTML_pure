@@ -5,6 +5,31 @@
     <link rel="icon" href="./templates/favicon.ico" type="image/x-icon"/>
     <link rel="shortcut icon" href="./templates/favicon.ico" type="image/x-icon"/>
     <link rel="stylesheet" type="text/css" th:href="@{./CSS/styles.css}">
+    <style>
+        a:link {
+            text-decoration: none;
+            color: #EDF2F5;
+        }
+
+        a:visited {
+            text-decoration: none;
+            color: #EDF2F5;
+        }
+
+        a:hover {
+            text-decoration: underline;
+            background-color: #EDF2F5;
+            color: #555;
+        }
+
+        a:active {
+            text-decoration: underline;
+        }
+
+        th {
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
 <header th:insert="templates/template1 :: headerLoggedCustomer"></header>
@@ -17,8 +42,17 @@
 
 <div th:if="${showProducts == null}">
     <table>
-        <tr th:each="product : ${viewedProducts}">
-            <td th:text="${product.name}"></td>
+        <tr>
+        <table>
+            <tr th:each="product : ${viewedProducts}">
+                <th><a th:href="@{'PersonalAreaCustomer?id=3&codeProd='+${product.code}}" th:text="${product.name}"></a></th>
+                <td th:text="${product.description}" style="width: 40%"></td>
+                <td><img th:src="@{'/upload/' + ${product.image}}" height="100" alt="imageProduct"/></td>
+                <td th:if="${product.sale}" th:class="saleMessage">Prodotto in offerta!</td>
+                <td th:if="${product.sale} == false" th:class="saleMessage">Prodotto visto di recente</td>
+
+            </tr>
+        </table>
         </tr>
     </table>
 </div>
@@ -45,7 +79,7 @@
 </div>
 
 <div th:if="${showProducts == 3}">
-    <a th:href="'PersonalAreaCustomer?id=2'"><button>Torna alla schermata di ricerca</button></a>
+    <a th:if="${searchedProducts} != null" th:href="'PersonalAreaCustomer?id=2'"><button>Torna alla schermata di ricerca</button></a>
 <div>
     <h3>Informazioni dettagliate sull'articolo selezionato</h3>
 

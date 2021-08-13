@@ -18,10 +18,12 @@ import javax.servlet.UnavailableException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
+import java.sql.Array;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @WebServlet(name = "personalAreaCustomer", urlPatterns = "/PersonalAreaCustomer")
@@ -72,8 +74,15 @@ import java.util.List;
             final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
             String id = request.getParameter("id");
 
-            if (id == null || (!id.equals("2") && !id.equals("3")))
+            if (id == null || (!id.equals("2") && !id.equals("3"))) {
                 servletContext.removeAttribute("searchedProducts");
+                try {
+                    if (session.getAttribute("viewedProducts") == null)
+                        addViewedProduct(-1, request, connection);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
             else if (id.equals("3")) {
                 int codeProduct = Integer.parseInt(request.getParameter("codeProd"));
                 try {
@@ -108,25 +117,41 @@ import java.util.List;
         ProductDAO productDAO = new ProductDAO(connection);
         int i = ArrayContainsProduct(viewedProducts, codeProd);
 
-        Product product = productDAO.getInfoProduct(codeProd);
+        if (codeProd == -1 && viewedProducts == null) {
+            viewedProducts = new ArrayList<>();
+            List<Product> products = productDAO.list();
+            Collections.shuffle(products);
+            for (int a = 0; a < 5; a++) {
+                products.get(a).setSale(true);
+                viewedProducts.add(products.get(a));
+            }
+        }
+        else {
+            Product product = productDAO.getInfoProduct(codeProd);
         if (viewedProducts == null) {
             viewedProducts = new ArrayList<>();
             viewedProducts.add(product);
             List<Product> products = productDAO.list();
+            Collections.shuffle(products);
             int x = 0;
             while (viewedProducts.size() < 5) {
-                if (ArrayContainsProduct(viewedProducts, products.get(x).getCode()) == -1)
+                if (ArrayContainsProduct(viewedProducts, products.get(x).getCode()) == -1) {
+                    products.get(x).setSale(true);
                     viewedProducts.add(products.get(x));
+                }
                 x++;
             }
         } else if (viewedProducts.size() < 5 && i == -1) {
             // Product not viewed - Array not full
             viewedProducts.add(product);
             List<Product> products = productDAO.list();
+            Collections.shuffle(products);
             int x = 0;
             while (viewedProducts.size() < 5) {
-                if (ArrayContainsProduct(viewedProducts, products.get(x).getCode()) == -1)
+                if (ArrayContainsProduct(viewedProducts, products.get(x).getCode()) == -1) {
+                    products.get(x).setSale(true);
                     viewedProducts.add(products.get(x));
+                }
                 x++;
             }
         } else if (viewedProducts.size() == 5 && i == -1) {
@@ -138,10 +163,13 @@ import java.util.List;
             viewedProducts.remove(i);
             viewedProducts.add(product);
             List<Product> products = productDAO.list();
+            Collections.shuffle(products);
             int x = 0;
             while (viewedProducts.size() < 5) {
-                if (ArrayContainsProduct(viewedProducts, products.get(x).getCode()) == -1)
+                if (ArrayContainsProduct(viewedProducts, products.get(x).getCode()) == -1) {
+                    products.get(x).setSale(true);
                     viewedProducts.add(products.get(x));
+                }
                 x++;
             }
         } else if (viewedProducts.size() == 5) {
@@ -149,13 +177,14 @@ import java.util.List;
             viewedProducts.remove(i);
             viewedProducts.add(product);
         }
+        }
         request.getSession().setAttribute("viewedProducts", viewedProducts);
 
     }
 
     protected int ArrayContainsProduct(ArrayList<Product> products, int codeProd) {
         int i = 0;
-        if (products != null) {
+        if (products != null && codeProd > 0) {
             for (Product product : products) {
                 if (product.getCode() == codeProd)
                     return i;

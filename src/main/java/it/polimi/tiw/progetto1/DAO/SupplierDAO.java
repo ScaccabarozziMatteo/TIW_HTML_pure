@@ -56,7 +56,7 @@ public class SupplierDAO {
     public List<Supplier> getInfoSuppliersShipment(int codeProd) throws SQLException {
         List<Supplier> suppliers = new ArrayList<>();
 
-        String SQLQuery = "SELECT * FROM dbtest.suppliers INNER JOIN dbtest.supplier_catalogue ON suppliers.code = supplier_catalogue.supplier INNER JOIN shipment_policy sp ON suppliers.code = sp.supplier WHERE supplier_catalogue.product LIKE ? GROUP BY sp.supplier";
+        String SQLQuery = "SELECT * FROM dbtest.suppliers INNER JOIN dbtest.supplier_catalogue ON suppliers.code = supplier_catalogue.supplier INNER JOIN shipment_policy sp ON suppliers.code = sp.supplier WHERE supplier_catalogue.product LIKE ? GROUP BY code";
 
 
         try (PreparedStatement statement = connection.prepareStatement(SQLQuery))

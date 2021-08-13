@@ -188,6 +188,18 @@ footer {
     text-align: center;
 }
 
+.saleMessage {
+    color: darkred;
+    animation: blink-animation 1s steps(5, start) infinite;
+    -webkit-animation: blink-animation 1s steps(5, start) infinite;
+}
+
+.viewedMessage {
+    color: darkgoldenrod;
+    animation: blink-animation 1s steps(5, start) infinite;
+    -webkit-animation: blink-animation 1s steps(5, start) infinite;
+}
+
 a, a:visited {
     color: dodgerblue;
 }
