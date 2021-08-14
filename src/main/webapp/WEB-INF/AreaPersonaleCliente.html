@@ -152,6 +152,30 @@
 
 </div>
 
+<div th:if="${showProducts == 4}">
+
+    <h2>Carrello</h2>
+
+    <table th:if="${cart} != null" th:each="singleCart : ${cart}">
+        <tr>
+            <th th:colspan="3" th:text="${singleCart.supplierName}"></th>
+        </tr>
+        <tr>
+            <th>Nome prodotto</th>
+            <th>Quantità</th>
+            <th>Foto</th>
+        </tr>
+
+        <tr th:each="productCart: ${singleCart.products}">
+            <td th:text="${productCart.name}"></td>
+            <td th:text="${productCart.quantity}"></td>
+            <td><img th:src="@{'/upload/' + ${productCart.image}}" height="100" alt="imageProduct"/></td>
+        </tr>
+
+    </table>
+
+</div>
+
 
 <footer th:insert="templates/template1 :: footer"></footer>
 </body>

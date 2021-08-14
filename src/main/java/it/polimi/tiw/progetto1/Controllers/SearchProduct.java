@@ -39,24 +39,30 @@ public class SearchProduct extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String nameProduct = request.getParameter("search");
+        HttpSession session = request.getSession();
+        String strLogin = (String) session.getAttribute("emailCustomer");
 
-        if (nameProduct != null && !nameProduct.equals("")) {
-            ProductDAO productDAO = new ProductDAO(connection);
-            List<Product> products;
-            try {
-                products = productDAO.getProductsFromSearchTab(nameProduct);
-                ServletContext servletContext = getServletContext();
-                servletContext.setAttribute("searchedProducts", products);
-                response.sendRedirect("PersonalAreaCustomer?id=2");
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
+        if (strLogin != null) {
+            String nameProduct = request.getParameter("search");
+
+            if (nameProduct != null && !nameProduct.equals("")) {
+                ProductDAO productDAO = new ProductDAO(connection);
+                List<Product> products;
+                try {
+                    products = productDAO.getProductsFromSearchTab(nameProduct);
+                    ServletContext servletContext = getServletContext();
+                    servletContext.setAttribute("searchedProducts", products);
+                    response.sendRedirect("PersonalAreaCustomer?id=2");
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
 
 
+            } else
+                response.sendError(400);
         }
         else
-            response.sendError(400);
+            response.sendRedirect("index.html");
     }
 }
 

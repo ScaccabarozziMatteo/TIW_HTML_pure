@@ -8,26 +8,35 @@ public class Order implements Serializable {
     private static final long serialVersionUID = 8726474585097L;
 
     private List<Product> products;
-    private String supplier;
+    private String supplierCode;
+    private String supplierName;
 
-    public Order(String supplier) {
+    public Order(String supplierCode) {
         this.products = new ArrayList<>();
-        this.supplier = supplier;
+        this.supplierCode = supplierCode;
     }
 
     public void setProducts(List<Product> products) {
         this.products = products;
     }
 
-    public void setSupplier(String supplier) {
-        this.supplier = supplier;
+    public void setSupplierCode(String supplierCode) {
+        this.supplierCode = supplierCode;
+    }
+
+    public void setSupplierName(String supplierName) {
+        this.supplierName = supplierName;
     }
 
     public List<Product> getProducts() {
         return products;
     }
 
-    public String getSupplier() {
-        return supplier;
+    public String getSupplierCode() {
+        return supplierCode;
+    }
+
+    public String getSupplierName() {
+        return supplierName;
     }
 }

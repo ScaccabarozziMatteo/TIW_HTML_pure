@@ -71,7 +71,7 @@ public class ProductDAO {
     public List<Product> getProductsFromSearchTab(String nameProduct) throws SQLException, IOException {
 
         List <Product> products = new ArrayList<>();
-        String SQLQuery = "SELECT * FROM dbtest.products  INNER JOIN dbtest.supplier_catalogue on products.code = supplier_catalogue.product  WHERE UPPER(name) LIKE ? OR UPPER(description) LIKE ? ORDER BY price  ";
+        String SQLQuery = "SELECT code, MIN(price), name, description, photo, category, price FROM dbtest.products INNER JOIN dbtest.supplier_catalogue ON products.code = supplier_catalogue.product WHERE UPPER(name) LIKE ? OR UPPER(description) LIKE ? GROUP BY code ORDER BY price";
         try (PreparedStatement statement = connection.prepareStatement(SQLQuery);
         ){
             statement.setString(1, '%' + nameProduct.toUpperCase() + '%');
@@ -79,7 +79,7 @@ public class ProductDAO {
             ResultSet resultSet = statement.executeQuery();
 
             while(resultSet.next()) {
-                Product product = new Product(resultSet.getInt("code"),resultSet.getString("name"),resultSet.getString("description"),resultSet.getString("category"),resultSet.getString("photo"),resultSet.getFloat("price"));
+                Product product = new Product(resultSet.getInt("code"),resultSet.getString("name"),resultSet.getString("description"),resultSet.getString("category"),resultSet.getString("photo"),resultSet.getFloat("MIN(price)"));
                 products.add(product);
             }
         }

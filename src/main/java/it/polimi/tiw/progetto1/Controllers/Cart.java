@@ -3,6 +3,7 @@ package it.polimi.tiw.progetto1.Controllers;
 import it.polimi.tiw.progetto1.Beans.Order;
 import it.polimi.tiw.progetto1.Beans.Product;
 import it.polimi.tiw.progetto1.DAO.ProductDAO;
+import it.polimi.tiw.progetto1.DAO.SupplierDAO;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -39,8 +40,8 @@ public class Cart extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-        List<Order> orders = (List<Order>) session.getAttribute("orders");
-        int action = -1, quantity = -1, codeProd = -1;
+        List<Order> orders = (List<Order>) session.getAttribute("cart");
+        int action = -1, quantity, codeProd = -1;
         String supplier = null;
 
         try {
@@ -64,7 +65,7 @@ public class Cart extends HttpServlet {
 
                 for (Order order : orders) {
                     // cart contains product of specific supplier
-                    if (order.getSupplier().equals(supplier))
+                    if (order.getSupplierCode().equals(supplier))
                         for (Product product : order.getProducts()) {
                             if (product.getCode() == codeProd) {
                                 product.setQuantity(product.getQuantity() + quantity);
@@ -75,17 +76,35 @@ public class Cart extends HttpServlet {
                         }
                     if (!cartContainsProduct) {
                         // cart contains supplier's order but not product
-                        order.getProducts().add(new Product(codeProd, quantity));
+                        Product product = null;
+                        try {
+                            product = productDAO.getInfoProduct(codeProd);
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+                        product.setQuantity(quantity);
+                        order.getProducts().add(product);
                         cartContainsSupplier = true;
                     }
                 }
                 if (!cartContainsSupplier) {
                     // cart not contains supplier
                     Order order = new Order(supplier);
+                    Product product = null;
+                    SupplierDAO supplierDAO = new SupplierDAO(connection);
+
+                    try {
+                        order.setSupplierName(supplierDAO.getSupplierName(supplier));
+                        product = productDAO.getInfoProduct(codeProd);
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                    product.setQuantity(quantity);
+                    order.getProducts().add(product);
                     orders.add(order);
-                    order.getProducts().add(new Product(codeProd, quantity));
                 }
 
+                session.setAttribute("cart", orders);
                 response.sendRedirect("PersonalAreaCustomer?id=4");
 
             }

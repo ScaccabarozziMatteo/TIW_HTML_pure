@@ -74,7 +74,7 @@ import java.util.List;
             final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
             String id = request.getParameter("id");
 
-            if (id == null || (!id.equals("2") && !id.equals("3"))) {
+            if (id == null || (!id.equals("2") && !id.equals("3") && !id.equals("4"))) {
                 servletContext.removeAttribute("searchedProducts");
                 try {
                     if (session.getAttribute("viewedProducts") == null)
@@ -100,6 +100,9 @@ import java.util.List;
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
+            }
+            else if (id.equals("4")) {
+                ctx.setVariable("cart", session.getAttribute("cart"));
             }
             ctx.setVariable("viewedProducts", session.getAttribute("viewedProducts"));
             ctx.setVariable("searchedProducts", servletContext.getAttribute("searchedProducts"));
