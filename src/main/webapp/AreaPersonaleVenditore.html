@@ -22,8 +22,6 @@
     <input class="inputInsertProd" type="text" id="nameProduct" name="nameProduct" maxlength="45" required><br>
     <label for="categoryProduct">Categoria:</label><br>
     <input type="text" class="inputInsertProd" maxlength="45" id="categoryProduct" name="categoryProduct" required><br>
-    <label for="quantityProduct">Quantità:</label><br>
-    <input type="number" class="inputInsertProd" id="quantityProduct" name="quantityProduct" required><br>
     <label for="priceProduct">Prezzo:</label><br>
     <input type="number" class="inputInsertProd" id="priceProduct" name="priceProduct" required><br>
     <label for="descriptionProd">Descrizione:</label><br>
@@ -33,7 +31,7 @@
     <br>
     <input type="submit" value="Inserisci il prodotto">
     <p class="positiveMessagge" th:if="${codeResult == 1}">Prodotto inserito!</p>
-    <p class="positiveMessagge" th:if="${codeResult == 2}">Prodotto già presente, disponibilità aggiornata!</p>
+    <p class="error" th:if="${codeResult == 2}">Prodotto già presente!</p>
     <p class="error" th:if="${codeResult == 3}">Parametri non validi!</p>
     <p class="error" th:if="${codeResult == 4}">Parametri mancanti!</p>
 
@@ -79,8 +77,8 @@
     <h3>Articoli in magazzino</h3>
     <h5 th:if="${allProducts} == null">Nessun articolo in magazzino :(</h5>
     <table th:if="${allProducts} != null">
-        <tr><th>Codice</th><th>Nome</th><th>Descrizione</th><th>Categoria</th><th>Quantità</th><th>Prezzo</th><th>Foto</th></tr>
-        <tr th:each="product: ${allProducts}"><td th:text="${product.code}"></td><td th:text="${product.name}"></td><td th:text="${product.description}"><td th:text="${product.category}"></td><td th:text="${product.quantity}"></td><td th:text="${#numbers.formatCurrency(product.price)}"></td><td><img th:src="@{'/upload/' + ${product.image}}" height="100" alt="imageProduct"/></td></tr>
+        <tr><th>Codice</th><th>Nome</th><th>Descrizione</th><th>Categoria</th><th>Prezzo</th><th>Foto</th></tr>
+        <tr th:each="product: ${allProducts}"><td th:text="${product.code}"></td><td th:text="${product.name}"></td><td th:text="${product.description}"><td th:text="${product.category}"></td><td th:text="${#numbers.formatCurrency(product.price)}"></td><td><img th:src="@{'/upload/' + ${product.image}}" height="100" alt="imageProduct"/></td></tr>
     </table>
 </div>
 

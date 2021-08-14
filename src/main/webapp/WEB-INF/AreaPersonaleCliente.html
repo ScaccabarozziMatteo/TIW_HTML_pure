@@ -66,12 +66,12 @@
             <th>Prezzo</th>
             <th>Dettagli</th>
         </tr>
-        <tr th:each="prod: ${searchedProducts}">
-            <td th:text="${prod.code}"></td>
-            <td th:text="${prod.name}"></td>
-            <td th:text="${#numbers.formatCurrency(prod.price)}"></td>
+        <tr th:each="product: ${searchedProducts}">
+            <td th:text="${product.code}"></td>
+            <td th:text="${product.name}"></td>
+            <td th:text="${#numbers.formatCurrency(product.price)}"></td>
             <td>
-                <a th:href="'PersonalAreaCustomer?id=3&codeProd='+${prod.code}"><button>Dettagli</button></a>
+                <a th:href="'PersonalAreaCustomer?id=3&codeProd='+${product.code}"><button>Dettagli</button></a>
             </td>
         </tr>
     </table>
@@ -109,12 +109,13 @@
                 <th>Prezzo prodotto</th>
                 <th>Politiche spedizione</th>
                 <th># prodotti del fornitore nel carrello</th>
+                <th></th>
             </tr>
             <tr th:each="supplier: ${listSuppliers}">
                 <td th:text="${supplier.name}"></td>
-                <td th:text="${#numbers.formatInteger(supplier.evaluation, 1)}"></td>
+                <td th:text="${#numbers.formatInteger(supplier.evaluation, 1)}" style="width: 10%"></td>
                 <td th:text="${#numbers.formatCurrency(supplier.priceProd)}"></td>
-                <td>
+                <td style="width: 30%">
                     <details>
                         <summary>Espandi</summary>
                         <div th:each="shipPolicy: ${shipmentPolicies}"
@@ -131,6 +132,16 @@
                     </details>
                 </td>
                 <td th:text="${supplier.name}"></td>
+                <td>
+                    <form method="GET" action="Cart">
+                        <label for="numArtCart"></label>
+                        <input type="number" id="numArtCart" name="numArtCart">
+                        <label for="codeProd"></label><input hidden type="number" id="codeProd" name="codeProd" th:value="${#httpServletRequest.getParameter('codeProd')}">
+                        <label for="action"></label><input hidden type="number" id="action" name="action" value="1">
+                        <label for="supplier"></label><input hidden type="text" id="supplier" name="supplier" th:value="${supplier.code}">
+                        <input type="submit" value="Inserisci nel carrello">
+                    </form>
+                </td>
             </tr>
 
 

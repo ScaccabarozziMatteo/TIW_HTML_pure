@@ -23,15 +23,6 @@ public class Product implements Serializable {
         this.image = image;
     }
 
-    public Product(int code, int quantity, String name, String description, String category, String image, float price) {
-        this.code = code;
-        this.quantity = quantity;
-        this.name = name;
-        this.description = description;
-        this.category = category;
-        this.image = image;
-        this.price = price;
-    }
     public Product(int code, String name, String description, String category, String image, float price) {
         this.code = code;
         this.name = name;
@@ -39,6 +30,11 @@ public class Product implements Serializable {
         this.category = category;
         this.image = image;
         this.price = price;
+    }
+
+    public Product(int code, int quantity) {
+        this.code = code;
+        this.quantity = quantity;
     }
 
     public int getCode() {
@@ -57,10 +53,6 @@ public class Product implements Serializable {
         return category;
     }
 
-    public int getQuantity() {
-        return quantity;
-    }
-
     public String getImage() {
         return image;
     }
@@ -71,6 +63,14 @@ public class Product implements Serializable {
 
     public boolean getSale() {
         return sale;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     public void setSale(boolean sale) {

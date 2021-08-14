@@ -157,7 +157,7 @@ body {
 }
 
 th, td {
-    text-align: left;
+    text-align: center;
     padding: 8px;
     width: 100px;
 }

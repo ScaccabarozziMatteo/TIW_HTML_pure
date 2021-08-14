@@ -39,14 +39,13 @@ public class ProductDAO {
         return products;
     }
 
-    public void addProductInCatalogue(int codeProd, int quantity, float price, String supplier) throws SQLException {
-        String query = "INSERT into dbtest.supplier_catalogue (price, product, supplier, quantity) VALUES(?, ?, ?, ?)";
+    public void addProductInCatalogue(int codeProd, float price, String supplier) throws SQLException {
+        String query = "INSERT into dbtest.supplier_catalogue (price, product, supplier) VALUES(?, ?, ?)";
 
         try (PreparedStatement pstatement = connection.prepareStatement(query)) {
             pstatement.setFloat(1, price);
             pstatement.setInt(2, codeProd);
             pstatement.setString(3, supplier);
-            pstatement.setInt(4, quantity);
             pstatement.executeUpdate();
 
         }
@@ -69,7 +68,7 @@ public class ProductDAO {
         return returnValue;
     }
 
-    public List<Product> getProductsFromSearchTab(String nameProduct) throws SQLException {
+    public List<Product> getProductsFromSearchTab(String nameProduct) throws SQLException, IOException {
 
         List <Product> products = new ArrayList<>();
         String SQLQuery = "SELECT * FROM dbtest.products  INNER JOIN dbtest.supplier_catalogue on products.code = supplier_catalogue.product  WHERE UPPER(name) LIKE ? OR UPPER(description) LIKE ? ORDER BY price  ";
@@ -109,7 +108,7 @@ public class ProductDAO {
     public List<Product> supplierProducts(String supplier) throws SQLException {
         List<Product> products = new ArrayList<>();
 
-        String SQLQuery = "SELECT sc.quantity, code, name, description, category, photo, price FROM dbtest.products INNER JOIN supplier_catalogue sc ON products.code = sc.product WHERE supplier LIKE ?";
+        String SQLQuery = "SELECT code, name, description, category, photo, price FROM dbtest.products INNER JOIN supplier_catalogue sc ON products.code = sc.product WHERE supplier LIKE ?";
 
         try (PreparedStatement statement = connection.prepareStatement(SQLQuery);
         ) {
@@ -117,7 +116,7 @@ public class ProductDAO {
             ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
-                Product product = new Product(resultSet.getInt("code"), resultSet.getInt("quantity"), resultSet.getString("name"), resultSet.getString("description"), resultSet.getString("category"), resultSet.getString("photo"), resultSet.getFloat("price"));
+                Product product = new Product(resultSet.getInt("code"), resultSet.getString("name"), resultSet.getString("description"), resultSet.getString("category"), resultSet.getString("photo"), resultSet.getFloat("price"));
                 products.add(product);
             }
         }
@@ -144,9 +143,9 @@ public class ProductDAO {
         return returnValue;
     }
 
-    public void createProduct(int code, String name, String description, String category, String photoPath, int quantity, String supplier, float price) throws SQLException {
+    public void createProduct(int code, String name, String description, String category, String photoPath, String supplier, float price) throws SQLException {
         String query = "INSERT into dbtest.products (code, name, description, category, photo) VALUES(?, ?, ?, ?, ?)";
-        String query2 = "INSERT into dbtest.supplier_catalogue (product, supplier, quantity, price) VALUES (?, ?, ?, ?)";
+        String query2 = "INSERT into dbtest.supplier_catalogue (product, supplier, price) VALUES (?, ?, ?)";
 
 
         try (PreparedStatement pstatement = connection.prepareStatement(query); PreparedStatement pstatement2 = connection.prepareStatement(query2)) {
@@ -159,34 +158,9 @@ public class ProductDAO {
 
             pstatement2.setInt(1, code);
             pstatement2.setString(2, supplier);
-            pstatement2.setInt(3, quantity);
-            pstatement2.setFloat(4, price);
+            pstatement2.setFloat(3, price);
             pstatement2.executeUpdate();
 
-
-        }
-    }
-
-    public void addQuantityProduct(int codeProd, int quantity, String supplier) throws SQLException {
-
-        String query = "SELECT quantity FROM dbtest.supplier_catalogue WHERE supplier LIKE ? AND product LIKE ?";
-        String query2 = "UPDATE dbtest.supplier_catalogue SET quantity = ? + ? WHERE supplier LIKE ? AND product LIKE ?";
-        int existingQuantity = 0;
-
-        try (PreparedStatement pstatement = connection.prepareStatement(query); PreparedStatement pstatement2 = connection.prepareStatement(query2)) {
-            pstatement.setString(1, supplier);
-            pstatement.setInt(2, codeProd);
-            ResultSet resultSet = pstatement.executeQuery();
-
-            while (resultSet.next()) {
-                existingQuantity = resultSet.getInt("quantity");
-            }
-
-            pstatement2.setInt(1, quantity);
-            pstatement2.setInt(2, existingQuantity);
-            pstatement2.setString(3, supplier);
-            pstatement2.setInt(4, codeProd);
-            pstatement2.executeUpdate();
 
         }
     }

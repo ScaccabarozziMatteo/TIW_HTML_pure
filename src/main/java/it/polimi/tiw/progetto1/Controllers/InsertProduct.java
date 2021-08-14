@@ -48,7 +48,7 @@ public class InsertProduct extends HttpServlet {
 
         String nameProduct, categoryProduct, descriptionProduct, photoName = null, photoExtension, photoPath;
         Part photoPart;
-        int codeProduct = -1, quantity;
+        int codeProduct = -1;
         float price = 0;
 
         nameProduct = request.getParameter("nameProduct");
@@ -62,29 +62,27 @@ public class InsertProduct extends HttpServlet {
 
         try {
             codeProduct = Integer.parseInt(request.getParameter("code"));
-            quantity = Integer.parseInt(request.getParameter("quantityProduct"));
             price = Float.parseFloat(request.getParameter("priceProduct"));
         }
         catch (NumberFormatException e) {
-            quantity = 0;
+            price = -1;
         }
 
         if (nameProduct != null && !nameProduct.equals("") && descriptionProduct != null && !descriptionProduct.equals("") && categoryProduct != null && !categoryProduct.equals("") && !photoName.equals("")) {
             ProductDAO productDAO = new ProductDAO(connection);
 
-            if (price > 0 && quantity != 0 && nameProduct.length() < 46 && descriptionProduct.length() < 301 && categoryProduct.length() < 46) {
+            if (price > 0 && nameProduct.length() < 46 && descriptionProduct.length() < 301 && categoryProduct.length() < 46) {
 
                 try {
                     if (productDAO.ifExistsProduct(codeProduct) && productDAO.supplierHasProduct(supplierCode, codeProduct)) {
-                        // update product quantity that exists in catalogue
-                        productDAO.addQuantityProduct(codeProduct, quantity, supplierCode);
+                        // product exists in catalogue
                         session.getServletContext().setAttribute("codeResult", 2);
                         response.sendRedirect("PersonalAreaSupplier");
 
                     } else if (productDAO.ifExistsProduct(codeProduct) && !productDAO.supplierHasProduct(supplierCode, codeProduct)) {
                         // add existing product in catalogue
 
-                        productDAO.addProductInCatalogue(codeProduct, quantity, price, supplierCode);
+                        productDAO.addProductInCatalogue(codeProduct, price, supplierCode);
                         session.getServletContext().setAttribute("codeResult", 1);
                         response.sendRedirect("PersonalAreaSupplier");
                     }
@@ -110,7 +108,7 @@ public class InsertProduct extends HttpServlet {
                         bufferedOutputStream.close();
 
 
-                        productDAO.createProduct(codeProduct, nameProduct, descriptionProduct, categoryProduct, photoName, quantity, supplierCode, price);
+                        productDAO.createProduct(codeProduct, nameProduct, descriptionProduct, categoryProduct, photoName, supplierCode, price);
                         session.getServletContext().setAttribute("codeResult", 1);
                         response.sendRedirect("PersonalAreaSupplier");
 
