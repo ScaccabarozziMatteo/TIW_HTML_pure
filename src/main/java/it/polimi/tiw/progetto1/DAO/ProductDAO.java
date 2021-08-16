@@ -89,7 +89,7 @@ public class ProductDAO {
     public Product getInfoProduct(int code) throws SQLException, IOException {
         Product product = null;
 
-        String SQLQuery = "SELECT * FROM dbtest.products WHERE products.code LIKE ?";
+        String SQLQuery = "SELECT * FROM dbtest.products INNER JOIN supplier_catalogue sc on products.code = sc.product WHERE products.code LIKE ?";
 
         try (PreparedStatement statement = connection.prepareStatement(SQLQuery);
         ) {
@@ -97,7 +97,7 @@ public class ProductDAO {
             ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
-                product = new Product(resultSet.getInt("code"), resultSet.getString("name"), resultSet.getString("description"), resultSet.getString("category"), resultSet.getString("photo"));
+                product = new Product(resultSet.getInt("code"), resultSet.getString("name"), resultSet.getString("description"), resultSet.getString("category"), resultSet.getString("photo"), resultSet.getFloat("price"));
             }
         }
 

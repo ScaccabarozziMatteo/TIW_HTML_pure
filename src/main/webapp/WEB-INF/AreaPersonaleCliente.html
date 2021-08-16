@@ -141,8 +141,6 @@
                         <label for="supplier"></label><input hidden type="text" id="supplier" name="supplier" th:value="${supplier.code}">
                         <input type="submit" value="Inserisci nel carrello">
                     </form>
-                    <div class="error" th:text="${errorNumProducts}"></div>
-
                 </td>
             </tr>
 
@@ -160,18 +158,36 @@
 
     <table th:if="${cart} != null" th:each="singleCart : ${cart}">
         <tr>
-            <th th:colspan="3" th:text="${singleCart.supplierName}"></th>
+            <th th:colspan="5" th:text="${singleCart.supplierName}"></th>
+            <th></th>
         </tr>
         <tr>
             <th>Nome prodotto</th>
             <th>Quantità</th>
             <th>Foto</th>
+            <th>Costo spedizione</th>
+            <th>Totale</th>
+            <th>Elimina</th>
         </tr>
 
         <tr th:each="productCart: ${singleCart.products}">
             <td th:text="${productCart.name}"></td>
             <td th:text="${productCart.quantity}"></td>
             <td><img th:src="@{'/upload/' + ${productCart.image}}" height="100" alt="imageProduct"/></td>
+            <td></td>
+            <td th:text="${#numbers.formatCurrency(productCart.quantity*productCart.price)}"></td>
+            <td>
+                <a th:href="@{'Cart?codeProd=' + ${productCart.code} + '&action=0&supplier=' + ${singleCart.supplierName}}"><img th:src="@{'/upload/trash_bin.png'}" height="30" alt="imageProduct"/></a>
+            </td>
+        </tr>
+
+        <tr>
+            <td>Totale</td>
+            <td></td>
+            <td></td>
+            <td th:text="${#numbers.formatCurrency(singleCart.shipmentFees)}"></td>
+            <td th:text="${#numbers.formatCurrency(singleCart.total)}"></td>
+            <td><a th:href="@{'Cart?action=2&supplier=' + ${singleCart.supplierName}}"><button>Ordina tutti i prodotti di questo fornitore!</button></a></td>
         </tr>
 
     </table>

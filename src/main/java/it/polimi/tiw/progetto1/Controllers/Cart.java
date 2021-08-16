@@ -2,9 +2,10 @@ package it.polimi.tiw.progetto1.Controllers;
 
 import it.polimi.tiw.progetto1.Beans.Order;
 import it.polimi.tiw.progetto1.Beans.Product;
+import it.polimi.tiw.progetto1.Beans.ShipmentPolicy;
 import it.polimi.tiw.progetto1.DAO.ProductDAO;
+import it.polimi.tiw.progetto1.DAO.ShipmentPolicyDAO;
 import it.polimi.tiw.progetto1.DAO.SupplierDAO;
-import org.thymeleaf.context.WebContext;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -37,106 +38,199 @@ public class Cart extends HttpServlet {
             throw new UnavailableException("Impossibile connettersi");
         }
     }
-    
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-        List<Order> orders = (List<Order>) session.getAttribute("cart");
-        int action = -1, quantity, codeProd = -1;
-        String supplier = null;
-        int maxProductSold = 0;
+        String strLogin = (String) session.getAttribute("emailCustomer");
+        if (strLogin != null) {
+            List<Order> orders = (List<Order>) session.getAttribute("cart");
+            int action = -1, quantity, codeProd = -1;
+            String supplier = null;
+            boolean end = false;
 
+            try {
+                action = Integer.parseInt(request.getParameter("action"));
 
-        try {
-            action = Integer.parseInt(request.getParameter("action"));
-            quantity = Integer.parseInt(request.getParameter("numArtCart"));
-            codeProd = Integer.parseInt(request.getParameter("codeProd"));
-            supplier = request.getParameter("supplier");
-
-        } catch (NumberFormatException e) {
-            quantity = -1;
-        }
-        try {
-            maxProductSold = new SupplierDAO(connection).numProductsSold(codeProd,supplier);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-
-        ProductDAO productDAO = new ProductDAO(connection);
-        boolean cartContainsProduct = false, cartContainsSupplier = false;
-
-            if (quantity > 0 && maxProductSold < quantity ){
-                ServletContext servletContext = getServletContext();
-                servletContext.setAttribute("errorNumProducts", "Puoi selezionare fino ad un massimo di "+maxProductSold+" prodotti");
-                response.sendRedirect("PersonalAreaCustomer?id=3&codeProd="+request.getParameter("codeProd"));
+            } catch (NumberFormatException e) {
+                action = -1;
             }
 
-        if (quantity > 0 && codeProd > 0 && supplier != null && !supplier.equals("") && quantity <= maxProductSold ) {
+            ProductDAO productDAO = new ProductDAO(connection);
+            boolean cartContainsProduct = false, cartContainsSupplier = false;
 
-            if (orders == null)
-                orders = new ArrayList<>();
             if (action == 1) {
 
-                for (Order order : orders) {
-                    // cart contains product of specific supplier
-                    if (order.getSupplierCode().equals(supplier))
-                        for (Product product : order.getProducts()) {
-                            if (product.getCode() == codeProd) {
-                                product.setQuantity(product.getQuantity() + quantity);
-                                cartContainsProduct = true;
+                try {
+                    quantity = Integer.parseInt(request.getParameter("numArtCart"));
+                    codeProd = Integer.parseInt(request.getParameter("codeProd"));
+                    supplier = request.getParameter("supplier");
+
+                } catch (NumberFormatException e) {
+                    quantity = -1;
+                }
+
+                if (quantity > 0 && codeProd > 0 && supplier != null && !supplier.equals("")) {
+
+                    if (orders == null)
+                        orders = new ArrayList<>();
+
+                    for (Order order : orders) {
+                        // cart contains product of specific supplier
+                        if (order.getSupplierCode().equals(supplier)) {
+                            for (Product product : order.getProducts()) {
+                                if (product.getCode() == codeProd) {
+                                    product.setQuantity(product.getQuantity() + quantity);
+                                    cartContainsProduct = true;
+                                    cartContainsSupplier = true;
+                                    end = true;
+                                    break;
+                                }
+                            }
+                            if (!cartContainsProduct) {
+                                // cart contains supplier's order but not product
+                                Product product = null;
+                                try {
+                                    product = productDAO.getInfoProduct(codeProd);
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                product.setQuantity(quantity);
+                                order.getProducts().add(product);
                                 cartContainsSupplier = true;
-                                break;
+                                end = true;
                             }
                         }
-                    if (!cartContainsProduct) {
-                        // cart contains supplier's order but not product
+                        if (end) {
+                            order.setTotQuantity(setTotalQuantity(order));
+                            order.setTotal(setSubtotal(order));
+                            try {
+                                order.setShipmentFees(setShipmentFees(order, connection));
+                            } catch (SQLException e) {
+                                e.printStackTrace();
+                            }
+                            break;
+                        }
+                    }
+                    if (!cartContainsSupplier) {
+                        // cart not contains supplier
+                        Order order = new Order(supplier);
                         Product product = null;
+                        SupplierDAO supplierDAO = new SupplierDAO(connection);
+
                         try {
+                            order.setSupplierName(supplierDAO.getSupplierName(supplier));
                             product = productDAO.getInfoProduct(codeProd);
                         } catch (SQLException e) {
                             e.printStackTrace();
                         }
                         product.setQuantity(quantity);
                         order.getProducts().add(product);
-                        cartContainsSupplier = true;
+                        order.setTotQuantity(setTotalQuantity(order));
+                        order.setTotal(setSubtotal(order));
+                        try {
+                            order.setShipmentFees(setShipmentFees(order, connection));
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+
+                        orders.add(order);
                     }
-                }
-                if (!cartContainsSupplier) {
-                    // cart not contains supplier
-                    Order order = new Order(supplier);
-                    Product product = null;
-                    SupplierDAO supplierDAO = new SupplierDAO(connection);
+                    session.setAttribute("cart", orders);
+                    response.sendRedirect("PersonalAreaCustomer?id=4");
 
-                    try {
-                        order.setSupplierName(supplierDAO.getSupplierName(supplier));
-                        product = productDAO.getInfoProduct(codeProd);
-                    } catch (SQLException e) {
-                        e.printStackTrace();
+                } else {
+                    response.sendError(400, "Parametri non validi");
+                }
+            } else if (action == 0) {
+
+                try {
+                    codeProd = Integer.parseInt(request.getParameter("codeProd"));
+                    supplier = request.getParameter("supplier");
+
+                } catch (NumberFormatException e) {
+                    codeProd = -1;
+                }
+
+                end = false;
+
+                if (codeProd > 0 && supplier != null && !supplier.equals("")) {
+                    for (Order order : orders) {
+                        if (order.getSupplierName().equals(supplier)) {
+                            for (Product product : order.getProducts()) {
+                                if (product.getCode() == codeProd) {
+                                    order.setTotQuantity(setTotalQuantity(order));
+                                    order.setTotal(setSubtotal(order));
+                                    try {
+                                        order.setShipmentFees(setShipmentFees(order, connection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    order.getProducts().remove(product);
+                                    end = true;
+                                    break;
+                                }
+                            }
+                            if (order.getProducts().isEmpty())
+                                orders.remove(order);
+                        }
+                        if (end)
+                            break;
                     }
-                    product.setQuantity(quantity);
-                    order.getProducts().add(product);
-                    orders.add(order);
+                    session.setAttribute("cart", orders);
+                    response.sendRedirect("PersonalAreaCustomer?id=4");
+                } else {
+                    response.sendError(400, "Parametri non validi");
                 }
-
-                session.setAttribute("cart", orders);
-                response.sendRedirect("PersonalAreaCustomer?id=4");
-
-            }
-            if (action == 0) {
-
-            }
-        } else if (quantity <= 0 ){
-            ServletContext servletContext = getServletContext();
-            servletContext.setAttribute("errorNumProducts", "Inserire almeno 1 prodotto");
-            response.sendRedirect("PersonalAreaCustomer?id=3&codeProd="+request.getParameter("codeProd"));
-
+            } else
+                response.sendError(400, "Parametri non validi");
+        } else {
+            response.sendRedirect("index.html");
         }
-
-
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+    }
+
+    protected float setShipmentFees(Order order, Connection connection) throws SQLException {
+        float fees = 0, quantity;
+        float subtotal = order.getTotal();
+        List<ShipmentPolicy> policyList;
+
+        quantity = order.getTotQuantity();
+        ShipmentPolicyDAO shipmentPolicyDAO = new ShipmentPolicyDAO(connection);
+        policyList = shipmentPolicyDAO.shipmentPolicyList(order.getSupplierCode());
+
+        for (ShipmentPolicy shipPolicy: policyList) {
+            if (shipPolicy.getMin_articles() == 999999999 && shipPolicy.getFreeShipment() <= subtotal) {
+                fees = 0;
+                return fees;
+            }
+            else if (quantity >= shipPolicy.getMin_articles() && quantity <= shipPolicy.getMax_articles()) {
+                fees = shipPolicy.getCostShipment();
+            }
+        }
+
+        return fees;
+    }
+
+    protected int setTotalQuantity(Order order) {
+        int quantity = 0;
+
+        for (Product product: order.getProducts()) {
+            quantity += product.getQuantity();
+        }
+        return quantity;
+    }
+
+    protected float setSubtotal(Order order) {
+        float total = 0;
+
+        for (Product product: order.getProducts()) {
+            total += product.getPrice()*product.getQuantity();
+        }
+        return total;
     }
 }

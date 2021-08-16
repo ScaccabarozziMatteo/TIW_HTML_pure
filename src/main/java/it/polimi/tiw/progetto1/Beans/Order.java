@@ -10,6 +10,33 @@ public class Order implements Serializable {
     private List<Product> products;
     private String supplierCode;
     private String supplierName;
+    private int totQuantity;
+    private float shipmentFees;
+    private float total;
+
+    public float getTotal() {
+        return total;
+    }
+
+    public void setTotal(float total) {
+        this.total = total;
+    }
+
+    public int getTotQuantity() {
+        return totQuantity;
+    }
+
+    public void setTotQuantity(int totQuantity) {
+        this.totQuantity = totQuantity;
+    }
+
+    public float getShipmentFees() {
+        return shipmentFees;
+    }
+
+    public void setShipmentFees(float shipmentFees) {
+        this.shipmentFees = shipmentFees;
+    }
 
     public Order(String supplierCode) {
         this.products = new ArrayList<>();
