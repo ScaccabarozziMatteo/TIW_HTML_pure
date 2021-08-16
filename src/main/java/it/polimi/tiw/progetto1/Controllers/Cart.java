@@ -44,6 +44,8 @@ public class Cart extends HttpServlet {
         List<Order> orders = (List<Order>) session.getAttribute("cart");
         int action = -1, quantity, codeProd = -1;
         String supplier = null;
+        int maxProductSold = 0;
+
 
         try {
             action = Integer.parseInt(request.getParameter("action"));
@@ -54,11 +56,22 @@ public class Cart extends HttpServlet {
         } catch (NumberFormatException e) {
             quantity = -1;
         }
+        try {
+            maxProductSold = new SupplierDAO(connection).numProductsSold(codeProd,supplier);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
 
         ProductDAO productDAO = new ProductDAO(connection);
         boolean cartContainsProduct = false, cartContainsSupplier = false;
 
-        if (quantity > 0 && codeProd > 0 && supplier != null && !supplier.equals("")) {
+            if (quantity > 0 && maxProductSold < quantity ){
+                ServletContext servletContext = getServletContext();
+                servletContext.setAttribute("errorNumProducts", "Puoi selezionare fino ad un massimo di "+maxProductSold+" prodotti");
+                response.sendRedirect("PersonalAreaCustomer?id=3&codeProd="+request.getParameter("codeProd"));
+            }
+
+        if (quantity > 0 && codeProd > 0 && supplier != null && !supplier.equals("") && quantity <= maxProductSold ) {
 
             if (orders == null)
                 orders = new ArrayList<>();
@@ -112,12 +125,13 @@ public class Cart extends HttpServlet {
             if (action == 0) {
 
             }
-        } else {
+        } else if (quantity <= 0 ){
             ServletContext servletContext = getServletContext();
             servletContext.setAttribute("errorNumProducts", "Inserire almeno 1 prodotto");
             response.sendRedirect("PersonalAreaCustomer?id=3&codeProd="+request.getParameter("codeProd"));
-
         }
+
+
     }
 
     @Override
