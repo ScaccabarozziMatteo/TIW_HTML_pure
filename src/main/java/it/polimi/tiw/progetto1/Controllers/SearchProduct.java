@@ -53,6 +53,7 @@ public class SearchProduct extends HttpServlet {
                     ServletContext servletContext = getServletContext();
                     servletContext.setAttribute("searchedProducts", products);
                     response.sendRedirect("PersonalAreaCustomer?id=2");
+                    servletContext.removeAttribute("errorNumProducts");
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                 }

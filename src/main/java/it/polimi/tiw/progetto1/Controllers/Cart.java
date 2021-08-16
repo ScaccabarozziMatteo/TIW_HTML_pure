@@ -129,6 +129,7 @@ public class Cart extends HttpServlet {
             ServletContext servletContext = getServletContext();
             servletContext.setAttribute("errorNumProducts", "Inserire almeno 1 prodotto");
             response.sendRedirect("PersonalAreaCustomer?id=3&codeProd="+request.getParameter("codeProd"));
+
         }
 
 
