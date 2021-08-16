@@ -46,6 +46,7 @@ public class templateIndex extends HttpServlet {
             servletContext.removeAttribute("errorNoCredential");
             servletContext.removeAttribute("errorLoginSupplier");
             servletContext.removeAttribute("errorLoginCustomer");
+
         }
     }
 }

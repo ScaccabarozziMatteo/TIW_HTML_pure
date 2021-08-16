@@ -135,12 +135,14 @@
                 <td>
                     <form method="GET" action="Cart">
                         <label for="numArtCart"></label>
-                        <input type="number" id="numArtCart" name="numArtCart">
+                        <input type="number" id="numArtCart" name="numArtCart" required>
                         <label for="codeProd"></label><input hidden type="number" id="codeProd" name="codeProd" th:value="${#httpServletRequest.getParameter('codeProd')}">
                         <label for="action"></label><input hidden type="number" id="action" name="action" value="1">
                         <label for="supplier"></label><input hidden type="text" id="supplier" name="supplier" th:value="${supplier.code}">
                         <input type="submit" value="Inserisci nel carrello">
                     </form>
+                    <div class="error" th:text="${errorNumProducts}"></div>
+
                 </td>
             </tr>
 

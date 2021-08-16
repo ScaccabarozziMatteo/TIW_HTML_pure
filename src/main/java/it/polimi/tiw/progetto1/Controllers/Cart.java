@@ -4,6 +4,7 @@ import it.polimi.tiw.progetto1.Beans.Order;
 import it.polimi.tiw.progetto1.Beans.Product;
 import it.polimi.tiw.progetto1.DAO.ProductDAO;
 import it.polimi.tiw.progetto1.DAO.SupplierDAO;
+import org.thymeleaf.context.WebContext;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -112,7 +113,10 @@ public class Cart extends HttpServlet {
 
             }
         } else {
-            response.sendError(400, "Parametri non validi");
+            ServletContext servletContext = getServletContext();
+            servletContext.setAttribute("errorNumProducts", "Inserire almeno 1 prodotto");
+            response.sendRedirect("PersonalAreaCustomer?id=3&codeProd="+request.getParameter("codeProd"));
+
         }
     }
 

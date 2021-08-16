@@ -97,6 +97,8 @@ import java.util.List;
                     ctx.setVariable("product", productDAO.getInfoProduct(codeProduct));
                     ctx.setVariable("listSuppliers", supplierDAO.getInfoSuppliersShipment(codeProduct));
                     ctx.setVariable("shipmentPolicies", sPolicyDAO.shipmentPoliciesProduct(codeProduct));
+                    ctx.setVariable("errorNumProducts", servletContext.getAttribute("errorNumProducts"));
+
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
