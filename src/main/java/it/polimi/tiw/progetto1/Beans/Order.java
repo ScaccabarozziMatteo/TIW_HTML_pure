@@ -13,6 +13,22 @@ public class Order implements Serializable {
     private int totQuantity;
     private float shipmentFees;
     private float total;
+    private int numOrder;
+
+    public int getNumOrder() {
+        return numOrder;
+    }
+
+    public void setNumOrder(int numOrder) {
+        this.numOrder = numOrder;
+    }
+
+    public Order (String supplierCode, float shipmentFees, float total, int numOrder) {
+        this.supplierCode = supplierCode;
+        this.shipmentFees = shipmentFees;
+        this.total = total;
+        this.numOrder = numOrder;
+    }
 
     public float getTotal() {
         return total;

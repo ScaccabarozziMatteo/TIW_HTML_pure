@@ -2,9 +2,6 @@ package it.polimi.tiw.progetto1.DAO;
 
 import it.polimi.tiw.progetto1.Beans.Product;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;

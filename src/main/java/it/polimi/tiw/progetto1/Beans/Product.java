@@ -77,4 +77,8 @@ public class Product implements Serializable {
         this.sale = sale;
     }
 
+    public void setPrice(float price) {
+        this.price = price;
+    }
+
 }

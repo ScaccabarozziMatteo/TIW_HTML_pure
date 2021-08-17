@@ -156,10 +156,11 @@
 
     <h2>Carrello</h2>
 
+    <h3 th:if="${cart} == null">Carrello vuoto :(</h3>
+
     <table th:if="${cart} != null" th:each="singleCart : ${cart}">
         <tr>
-            <th th:colspan="5" th:text="${singleCart.supplierName}"></th>
-            <th></th>
+            <th th:colspan="6" th:text="${singleCart.supplierName}"></th>
         </tr>
         <tr>
             <th>Nome prodotto</th>
@@ -186,13 +187,57 @@
             <td></td>
             <td></td>
             <td th:text="${#numbers.formatCurrency(singleCart.shipmentFees)}"></td>
-            <td th:text="${#numbers.formatCurrency(singleCart.total)}"></td>
+            <td th:text="${#numbers.formatCurrency(singleCart.total + singleCart.shipmentFees)}"></td>
             <td><a th:href="@{'Cart?action=2&supplier=' + ${singleCart.supplierName}}"><button>Ordina tutti i prodotti di questo fornitore!</button></a></td>
         </tr>
 
     </table>
 
 </div>
+
+
+<div th:if="${showProducts == 5}">
+
+    <h2>Ordini</h2>
+
+    <h3 th:if="${orders} == null">Nessun ordine presente :(</h3>
+
+    <table th:if="${orders} != null" th:each="singleOrder : ${orders}">
+        <tr>
+            <th th:text="'#Ordine: ' + ${singleOrder.numOrder}"></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th th:text="'Venditore: ' + ${singleOrder.supplierName}"></th>
+        </tr>
+        <tr>
+            <th>Nome prodotto</th>
+            <th>Quantità</th>
+            <th>Foto</th>
+            <th>Costo spedizione</th>
+            <th>Totale</th>
+        </tr>
+
+        <tr th:each="productOrder: ${singleOrder.products}">
+            <td th:text="${productOrder.name}"></td>
+            <td th:text="${productOrder.quantity}"></td>
+            <td><img th:src="@{'/upload/' + ${productOrder.image}}" height="100" alt="imageProduct"/></td>
+            <td></td>
+            <td th:text="${#numbers.formatCurrency(productOrder.quantity*productOrder.price)}"></td>
+        </tr>
+
+        <tr>
+            <td>Totale</td>
+            <td></td>
+            <td></td>
+            <td th:text="${#numbers.formatCurrency(singleOrder.shipmentFees)}"></td>
+            <td th:text="${#numbers.formatCurrency(singleOrder.total + singleOrder.shipmentFees)}"></td>
+        </tr>
+
+    </table>
+
+</div>
+
 
 
 <footer th:insert="templates/template1 :: footer"></footer>

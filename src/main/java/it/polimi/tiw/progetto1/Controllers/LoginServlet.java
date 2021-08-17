@@ -44,13 +44,14 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
         throws IOException {
         HttpSession session = request.getSession();
+        ServletContext servletContext = getServletContext();
+        servletContext.setAttribute("updateOrders", "T");
 
         String emailCustomer, passwordCustomer, codeSupplier, passwordSupplier;
         emailCustomer = request.getParameter("emailCustomer");
         passwordCustomer = request.getParameter("passwordCustomer");
         codeSupplier = request.getParameter("codeSupplier");
         passwordSupplier = request.getParameter("passwordSupplier");
-
             if (emailCustomer != null && !emailCustomer.equals("") && passwordCustomer != null && !passwordCustomer.equals("")) {
                 CustomerDAO customerDAO = new CustomerDAO(connection);
 
@@ -63,7 +64,7 @@ public class LoginServlet extends HttpServlet {
                         response.sendRedirect("PersonalAreaCustomer");
                     }
                     else {
-                        ServletContext servletContext = getServletContext();
+                        servletContext = getServletContext();
                         servletContext.setAttribute("errorLoginCustomer", "Credenziali errate o account non esistente!");
                         response.sendRedirect("index.html");
                     }
@@ -84,7 +85,6 @@ public class LoginServlet extends HttpServlet {
 
                     }
                     else {
-                        ServletContext servletContext = getServletContext();
                         servletContext.setAttribute("errorLoginSupplier", "Credenziali errate o account non esistente!");
                         response.sendRedirect("index.html");
                     }
@@ -93,7 +93,6 @@ public class LoginServlet extends HttpServlet {
                 }
             }
             else if (emailCustomer == null || passwordCustomer == null && codeSupplier == null || passwordSupplier == null) {
-                ServletContext servletContext = getServletContext();
                 servletContext.setAttribute("errorNoCredential", "Credenziali non valide!");
                 response.sendRedirect("index.html");
             }

@@ -45,7 +45,7 @@ public class SearchProduct extends HttpServlet {
         if (strLogin != null) {
             String nameProduct = request.getParameter("search");
 
-            if (nameProduct != null && !nameProduct.equals("")) {
+            if (nameProduct != null && !nameProduct.equals("") && nameProduct.length() < 301) {
                 ProductDAO productDAO = new ProductDAO(connection);
                 List<Product> products;
                 try {
@@ -53,14 +53,13 @@ public class SearchProduct extends HttpServlet {
                     ServletContext servletContext = getServletContext();
                     servletContext.setAttribute("searchedProducts", products);
                     response.sendRedirect("PersonalAreaCustomer?id=2");
-                    servletContext.removeAttribute("errorNumProducts");
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                 }
 
 
             } else
-                response.sendError(400);
+                response.sendError(400, "Parametri non validi");
         }
         else
             response.sendRedirect("index.html");

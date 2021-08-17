@@ -1,6 +1,8 @@
 package it.polimi.tiw.progetto1.templates;
 
+import it.polimi.tiw.progetto1.Beans.Order;
 import it.polimi.tiw.progetto1.Beans.Product;
+import it.polimi.tiw.progetto1.DAO.OrderDAO;
 import it.polimi.tiw.progetto1.DAO.ProductDAO;
 import it.polimi.tiw.progetto1.DAO.ShipmentPolicyDAO;
 import it.polimi.tiw.progetto1.DAO.SupplierDAO;
@@ -74,7 +76,7 @@ import java.util.List;
             final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
             String id = request.getParameter("id");
 
-            if (id == null || (!id.equals("2") && !id.equals("3") && !id.equals("4"))) {
+            if (id == null || (!id.equals("2") && !id.equals("3") && !id.equals("4")) && !id.equals("5")) {
                 servletContext.removeAttribute("searchedProducts");
                 try {
                     if (session.getAttribute("viewedProducts") == null)
@@ -104,9 +106,23 @@ import java.util.List;
             else if (id.equals("4")) {
                 ctx.setVariable("cart", session.getAttribute("cart"));
             }
+            else if (id.equals("5")) {
+                if (servletContext.getAttribute("updateOrders").equals("T")) {
+                    OrderDAO orderDAO = new OrderDAO(connection);
+                    List<Order> orders = null;
+                    try {
+                        orders = orderDAO.getOrders(strLogin);
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                    servletContext.setAttribute("updateOrders", "F");
+                    servletContext.setAttribute("orders", orders);
+                }
+            }
             ctx.setVariable("viewedProducts", session.getAttribute("viewedProducts"));
             ctx.setVariable("searchedProducts", servletContext.getAttribute("searchedProducts"));
             ctx.setVariable("showProducts", id);
+            ctx.setVariable("orders", servletContext.getAttribute("orders"));
 
             templateEngine.process(path, ctx, response.getWriter());
         } else {

@@ -3,6 +3,7 @@ package it.polimi.tiw.progetto1.Controllers;
 import it.polimi.tiw.progetto1.Beans.Order;
 import it.polimi.tiw.progetto1.Beans.Product;
 import it.polimi.tiw.progetto1.Beans.ShipmentPolicy;
+import it.polimi.tiw.progetto1.DAO.OrderDAO;
 import it.polimi.tiw.progetto1.DAO.ProductDAO;
 import it.polimi.tiw.progetto1.DAO.ShipmentPolicyDAO;
 import it.polimi.tiw.progetto1.DAO.SupplierDAO;
@@ -45,6 +46,7 @@ public class Cart extends HttpServlet {
         String strLogin = (String) session.getAttribute("emailCustomer");
         if (strLogin != null) {
             List<Order> orders = (List<Order>) session.getAttribute("cart");
+            ServletContext servletContext = getServletContext();
             int action = -1, quantity, codeProd = -1;
             String supplier = null;
             boolean end = false;
@@ -70,7 +72,7 @@ public class Cart extends HttpServlet {
                     quantity = -1;
                 }
 
-                if (quantity > 0 && codeProd > 0 && supplier != null && !supplier.equals("")) {
+                if (quantity > 0 && codeProd > 0 && supplier != null && !supplier.equals("") && supplier.length() < 46) {
 
                     if (orders == null)
                         orders = new ArrayList<>();
@@ -154,7 +156,7 @@ public class Cart extends HttpServlet {
 
                 end = false;
 
-                if (codeProd > 0 && supplier != null && !supplier.equals("")) {
+                if (codeProd > 0 && supplier != null && !supplier.equals("") && supplier.length() < 46) {
                     for (Order order : orders) {
                         if (order.getSupplierName().equals(supplier)) {
                             for (Product product : order.getProducts()) {
@@ -182,7 +184,33 @@ public class Cart extends HttpServlet {
                 } else {
                     response.sendError(400, "Parametri non validi");
                 }
-            } else
+            } else if (action == 2) {
+                supplier = request.getParameter("supplier");
+                if (supplier != null && !supplier.equals("") && supplier.length() < 46) {
+
+                    for (Order order : orders) {
+                        if (order.getSupplierName().equals(supplier)) {
+                            OrderDAO orderDAO = new OrderDAO(connection);
+                            try {
+                                orderDAO.sentOrder(order, strLogin);
+                                orders.remove(order);
+                                if (orders.isEmpty())
+                                    session.setAttribute("cart", null);
+                                else
+                                    session.setAttribute("cart", orders);
+                            } catch (SQLException e) {
+                                e.printStackTrace();
+                            }
+                            break;
+                        }
+                    }
+                    servletContext.setAttribute("updateOrders", "T");
+                    response.sendRedirect("PersonalAreaCustomer?id=5");
+                }
+                else
+                    response.sendError(400, "Parametri non validi");
+            }
+            else
                 response.sendError(400, "Parametri non validi");
         } else {
             response.sendRedirect("index.html");
