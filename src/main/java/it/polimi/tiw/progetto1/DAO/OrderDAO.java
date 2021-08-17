@@ -21,21 +21,28 @@ public class OrderDAO {
 
     public void sentOrder(Order order, String emailCustomer) throws SQLException {
         String query = "INSERT into dbtest.orders (supplier, customer, costShipment, subtotal) VALUES(?, ?, ?, ?)";
-        String query2 = "INSERT into dbtest.products_order (product, orderID, quantity, price) VALUES (?, LAST_INSERT_ID(), ?, ?)";
+        String query3 = "SELECT LAST_INSERT_ID()";
+        String query2 = "INSERT into dbtest.products_order (product, orderID, quantity, price) VALUES (?, ?, ?, ?)";
 
-        try (PreparedStatement pstatement = connection.prepareStatement(query)) {
+        int id = 0;
+        try (PreparedStatement pstatement = connection.prepareStatement(query);PreparedStatement pstatement3 = connection.prepareStatement(query3)) {
             pstatement.setString(1, order.getSupplierCode());
             pstatement.setString(2, emailCustomer);
             pstatement.setFloat(3, order.getShipmentFees());
             pstatement.setFloat(4, order.getTotal());
             pstatement.executeUpdate();
+            
+            ResultSet resultSet = pstatement3.executeQuery();
+            while (resultSet.next())
+                id = resultSet.getInt(1);
         }
 
         for (Product product : order.getProducts()) {
             try (PreparedStatement pstatement3 = connection.prepareStatement(query2)) {
                 pstatement3.setInt(1, product.getCode());
-                pstatement3.setInt(2, product.getQuantity());
-                pstatement3.setFloat(3, product.getPrice());
+                pstatement3.setInt(2, id);
+                pstatement3.setInt(3, product.getQuantity());
+                pstatement3.setFloat(4, product.getPrice());
                 pstatement3.executeUpdate();
 
             }

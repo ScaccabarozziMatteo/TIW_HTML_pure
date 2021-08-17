@@ -69,7 +69,7 @@
 
     <table th:if="${shipmentPolicies} != null">
         <tr><th>Da</th><th>A</th><th>Prezzo di spedizione</th></tr>
-        <tr th:each="shipmentPolicy: ${shipmentPolicies}"><td th:if="${shipmentPolicy.min_articles} > 0 and ${shipmentPolicy.min_articles} != 999999999" th:text="${shipmentPolicy.min_articles}"></td><td th:if="${shipmentPolicy.freeShipment} > 0" th:text="${shipmentPolicy.freeShipment}"></td><td th:if="${shipmentPolicy.min_articles} > 0 and ${shipmentPolicy.min_articles} != 999999999" th:text="${shipmentPolicy.max_articles}"><td th:if="${shipmentPolicy.min_articles} == 999999999"></td><td th:text="${#numbers.formatCurrency(shipmentPolicy.costShipment)}"></td></tr>
+        <tr th:each="shipmentPolicy: ${shipmentPolicies}"><td th:if="${shipmentPolicy.min_articles} > 0 and ${shipmentPolicy.min_articles} != 999999999" th:text="${shipmentPolicy.min_articles}"></td><td th:if="${shipmentPolicy.freeShipment} > 0" th:text="${#numbers.formatCurrency(shipmentPolicy.freeShipment)}"></td><td th:if="${shipmentPolicy.min_articles} > 0 and ${shipmentPolicy.min_articles} != 999999999" th:text="${shipmentPolicy.max_articles}"><td th:if="${shipmentPolicy.min_articles} == 999999999"></td><td th:text="${#numbers.formatCurrency(shipmentPolicy.costShipment)}"></td></tr>
     </table>
 </div>
 

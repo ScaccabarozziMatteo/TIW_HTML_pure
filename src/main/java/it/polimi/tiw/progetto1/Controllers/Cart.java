@@ -193,17 +193,17 @@ public class Cart extends HttpServlet {
                             OrderDAO orderDAO = new OrderDAO(connection);
                             try {
                                 orderDAO.sentOrder(order, strLogin);
-                                orders.remove(order);
-                                if (orders.isEmpty())
-                                    session.setAttribute("cart", null);
-                                else
-                                    session.setAttribute("cart", orders);
                             } catch (SQLException e) {
                                 e.printStackTrace();
                             }
+                            orders.remove(order);
                             break;
                         }
                     }
+                    if (orders.isEmpty())
+                        session.setAttribute("cart", null);
+                    else
+                        session.setAttribute("cart", orders);
                     servletContext.setAttribute("updateOrders", "T");
                     response.sendRedirect("PersonalAreaCustomer?id=5");
                 }

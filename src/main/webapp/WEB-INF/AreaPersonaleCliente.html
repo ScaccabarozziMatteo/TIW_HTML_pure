@@ -200,7 +200,7 @@
 
     <h2>Ordini</h2>
 
-    <h3 th:if="${orders} == null">Nessun ordine presente :(</h3>
+    <h3 th:if="${orders.isEmpty()}">Nessun ordine presente :(</h3>
 
     <table th:if="${orders} != null" th:each="singleOrder : ${orders}">
         <tr>
