@@ -19,6 +19,7 @@ public class SearchProduct extends HttpServlet {
 
     private Connection connection = null;
 
+    @Override
     public void init() throws ServletException {
 
         try {
@@ -63,6 +64,17 @@ public class SearchProduct extends HttpServlet {
         }
         else
             response.sendRedirect("index.html");
+    }
+
+    @Override
+    public void destroy() {
+        try {
+            if (connection != null){
+                connection.close();
+            }
+        } catch (SQLException ignored) {
+
+        }
     }
 }
 

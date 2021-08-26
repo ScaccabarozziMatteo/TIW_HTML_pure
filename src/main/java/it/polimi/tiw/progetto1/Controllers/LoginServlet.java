@@ -41,6 +41,7 @@ public class LoginServlet extends HttpServlet {
 
     }
 
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
         throws IOException {
         HttpSession session = request.getSession();
@@ -98,6 +99,7 @@ public class LoginServlet extends HttpServlet {
             }
     }
 
+    @Override
     public void destroy() {
         try {
             if (connection != null){

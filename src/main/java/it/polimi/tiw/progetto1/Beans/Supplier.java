@@ -11,6 +11,15 @@ public class Supplier implements Serializable {
     private int evaluation;
     private float priceProd;
     private float freeShipPrice;
+    private int quantityCart = 0;
+
+    public int getQuantityCart() {
+        return quantityCart;
+    }
+
+    public void setQuantityCart(int quantityCart) {
+        this.quantityCart = quantityCart;
+    }
 
     public Supplier(String code, String name, String password, int evaluation) {
         this.code = code;

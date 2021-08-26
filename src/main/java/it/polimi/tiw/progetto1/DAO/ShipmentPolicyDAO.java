@@ -2,7 +2,6 @@ package it.polimi.tiw.progetto1.DAO;
 
 import it.polimi.tiw.progetto1.Beans.ShipmentPolicy;
 
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

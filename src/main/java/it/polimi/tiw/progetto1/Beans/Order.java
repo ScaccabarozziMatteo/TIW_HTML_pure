@@ -10,7 +10,7 @@ public class Order implements Serializable {
     private List<Product> products;
     private String supplierCode;
     private String supplierName;
-    private int totQuantity;
+    private int totQuantity = 0;
     private float shipmentFees;
     private float total;
     private int numOrder;

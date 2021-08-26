@@ -22,6 +22,7 @@ import java.util.List;
 public class Cart extends HttpServlet {
     private Connection connection;
 
+    @Override
     public void init() throws ServletException {
 
         try {
@@ -260,5 +261,16 @@ public class Cart extends HttpServlet {
             total += product.getPrice()*product.getQuantity();
         }
         return total;
+    }
+
+    @Override
+    public void destroy() {
+        try {
+            if (connection != null){
+                connection.close();
+            }
+        } catch (SQLException ignored) {
+
+        }
     }
 }

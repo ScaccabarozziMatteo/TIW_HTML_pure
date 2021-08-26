@@ -20,6 +20,7 @@ public class InsertShipmentPolicy extends HttpServlet {
 
     private Connection connection = null;
 
+    @Override
     public void init() throws ServletException {
 
         try {
@@ -38,6 +39,7 @@ public class InsertShipmentPolicy extends HttpServlet {
         }
     }
 
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         HttpSession session = request.getSession();
@@ -109,5 +111,16 @@ public class InsertShipmentPolicy extends HttpServlet {
 
         } else
             response.sendRedirect("index.html");
+    }
+
+    @Override
+    public void destroy() {
+        try {
+            if (connection != null){
+                connection.close();
+            }
+        } catch (SQLException ignored) {
+
+        }
     }
 }

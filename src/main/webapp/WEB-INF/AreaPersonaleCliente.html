@@ -49,7 +49,7 @@
                 <td th:text="${product.description}" style="width: 40%"></td>
                 <td><img th:src="@{'/upload/' + ${product.image}}" height="100" alt="imageProduct"/></td>
                 <td th:if="${product.sale}" th:class="saleMessage">Prodotto in offerta!</td>
-                <td th:if="${product.sale} == false" th:class="saleMessage">Prodotto visto di recente</td>
+                <td th:if="${product.sale} == false" th:class="viewedMessage">Prodotto visto di recente</td>
 
             </tr>
         </table>
@@ -109,7 +109,7 @@
                 <th>Prezzo prodotto</th>
                 <th>Politiche spedizione</th>
                 <th># prodotti del fornitore nel carrello</th>
-                <th></th>
+                <th>Quantità</th>
             </tr>
             <tr th:each="supplier: ${listSuppliers}">
                 <td th:text="${supplier.name}"></td>
@@ -122,20 +122,21 @@
                              th:if="${shipPolicy.supplier} == ${supplier.code}">
                             <div th:if="${shipPolicy.min_articles} != 999999999">
                                 Da <span th:text="${shipPolicy.min_articles}"></span> a <span
-                                    th:text="${shipPolicy.max_articles}"></span> articoli <span th:text="${#numbers.formatCurrency(shipPolicy.costShipment)}"></span>
+                                    th:text="${shipPolicy.max_articles}"></span> articoli <span
+                                    th:text="${#numbers.formatCurrency(shipPolicy.costShipment)}"></span>
                             </div>
-                                <div th:if="${shipPolicy.min_articles} == 999999999">
-                                    Spedizione gratuita da <span
-                                        th:text="${#numbers.formatCurrency(shipPolicy.freeShipment)}"></span>
-                                </div>
+                            <div th:if="${shipPolicy.min_articles} == 999999999">
+                                Spedizione gratuita da <span
+                                    th:text="${#numbers.formatCurrency(shipPolicy.freeShipment)}"></span>
                             </div>
+                        </div>
                     </details>
                 </td>
-                <td th:text="${supplier.name}"></td>
+                <td th:text="${supplier.quantityCart}"></td>
                 <td>
                     <form method="GET" action="Cart">
                         <label for="numArtCart"></label>
-                        <input type="number" id="numArtCart" name="numArtCart" required>
+                        <input type="number" id="numArtCart" placeholder="Quantità" name="numArtCart" required>
                         <label for="codeProd"></label><input hidden type="number" id="codeProd" name="codeProd" th:value="${#httpServletRequest.getParameter('codeProd')}">
                         <label for="action"></label><input hidden type="number" id="action" name="action" value="1">
                         <label for="supplier"></label><input hidden type="text" id="supplier" name="supplier" th:value="${supplier.code}">

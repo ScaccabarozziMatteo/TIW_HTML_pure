@@ -10,8 +10,9 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet("/logout")
 
-public class DeleteCookie extends HttpServlet {
+public class Logout extends HttpServlet {
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         Cookie[] cookies = request.getCookies();
@@ -21,10 +22,9 @@ public class DeleteCookie extends HttpServlet {
                 aCookie.setMaxAge(0);
                 response.addCookie(aCookie);
             }
-            getServletContext().setAttribute("showProducts",1);
+            getServletContext().setAttribute("showProducts", 1);
             request.getSession().invalidate();
-            response.sendRedirect("index.html");
-
         }
+            response.sendRedirect("index.html");
     }
 }

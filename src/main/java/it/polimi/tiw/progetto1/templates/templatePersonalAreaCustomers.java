@@ -2,6 +2,7 @@ package it.polimi.tiw.progetto1.templates;
 
 import it.polimi.tiw.progetto1.Beans.Order;
 import it.polimi.tiw.progetto1.Beans.Product;
+import it.polimi.tiw.progetto1.Beans.Supplier;
 import it.polimi.tiw.progetto1.DAO.OrderDAO;
 import it.polimi.tiw.progetto1.DAO.ProductDAO;
 import it.polimi.tiw.progetto1.DAO.ShipmentPolicyDAO;
@@ -72,6 +73,7 @@ import java.util.List;
         if (strLogin != null) {
 
             String path = "/WEB-INF/AreaPersonaleCliente";
+            List<Order> cart = null;
             ServletContext servletContext = getServletContext();
             final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
             String id = request.getParameter("id");
@@ -95,9 +97,14 @@ import java.util.List;
                 ProductDAO productDAO = new ProductDAO(connection);
                 SupplierDAO supplierDAO = new SupplierDAO(connection);
                 ShipmentPolicyDAO sPolicyDAO = new ShipmentPolicyDAO(connection);
+
+                try {
+                    cart = (List<Order>) session.getAttribute("cart");
+                } catch (ClassCastException ignored) {}
+                
                 try {
                     ctx.setVariable("product", productDAO.getInfoProduct(codeProduct));
-                    ctx.setVariable("listSuppliers", supplierDAO.getInfoSuppliersShipment(codeProduct));
+                    ctx.setVariable("listSuppliers", setQuantity(cart, supplierDAO.getInfoSuppliersShipment(codeProduct)));
                     ctx.setVariable("shipmentPolicies", sPolicyDAO.shipmentPoliciesProduct(codeProduct));
                 } catch (SQLException e) {
                     e.printStackTrace();
@@ -211,5 +218,18 @@ import java.util.List;
             }
         }
         return -1;
+    }
+    
+    protected List<Supplier> setQuantity(List<Order> orders, List<Supplier> suppliers) {
+        if (orders != null) {
+            for (Supplier supplier : suppliers) {
+                for (Order order : orders) {
+                    if (order.getSupplierCode().equals(supplier.getCode()))
+                        supplier.setQuantityCart(order.getTotQuantity());
+                }
+            }
+
+        }
+        return suppliers;
     }
 }

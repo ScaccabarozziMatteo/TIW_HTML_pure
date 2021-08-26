@@ -39,6 +39,7 @@ public class Signup extends HttpServlet {
         }
     }
 
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
@@ -120,6 +121,7 @@ public class Signup extends HttpServlet {
         }
     }
 
+    @Override
     public void destroy() {
         try {
             if (connection != null){
