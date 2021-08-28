@@ -206,7 +206,7 @@
     <table th:if="${orders} != null" th:each="singleOrder : ${orders}">
         <tr>
             <th th:text="'#Ordine: ' + ${singleOrder.numOrder}"></th>
-            <th></th>
+            <th th:text="${#dates.format(singleOrder.date, 'dd MMM yyyy')}"></th>
             <th></th>
             <th></th>
             <th th:text="'Venditore: ' + ${singleOrder.supplierName}"></th>

@@ -20,16 +20,25 @@ public class OrderDAO {
     }
 
     public void sentOrder(Order order, String emailCustomer) throws SQLException {
-        String query = "INSERT into dbtest.orders (supplier, customer, costShipment, subtotal) VALUES(?, ?, ?, ?)";
+        String addressQuery = "SELECT address FROM customers WHERE email LIKE ?";
+        String query = "INSERT into dbtest.orders (supplier, customer, costShipment, subtotal, address, dateOrder) VALUES(?, ?, ?, ?, ?, CURRENT_TIMESTAMP)";
         String query3 = "SELECT LAST_INSERT_ID()";
         String query2 = "INSERT into dbtest.products_order (product, orderID, quantity, price) VALUES (?, ?, ?, ?)";
 
+        String address = null;
         int id = 0;
-        try (PreparedStatement pstatement = connection.prepareStatement(query);PreparedStatement pstatement3 = connection.prepareStatement(query3)) {
+        try (PreparedStatement pstatementAddress = connection.prepareStatement(addressQuery);PreparedStatement pstatement = connection.prepareStatement(query);PreparedStatement pstatement3 = connection.prepareStatement(query3)) {
+            pstatementAddress.setString(1, emailCustomer);
+            
+            ResultSet resultSetAdd = pstatementAddress.executeQuery();
+            while (resultSetAdd.next())
+                address = resultSetAdd.getString("address");
+            
             pstatement.setString(1, order.getSupplierCode());
             pstatement.setString(2, emailCustomer);
             pstatement.setFloat(3, order.getShipmentFees());
             pstatement.setFloat(4, order.getTotal());
+            pstatement.setString(5, address);
             pstatement.executeUpdate();
             
             ResultSet resultSet = pstatement3.executeQuery();
@@ -64,7 +73,7 @@ public class OrderDAO {
             ResultSet resultSet = pstatement.executeQuery();
 
             while (resultSet.next()) {
-                Order order = new Order(resultSet.getString("supplier"), resultSet.getFloat("costShipment"), resultSet.getFloat("subtotal"), resultSet.getInt("id"));
+                Order order = new Order(resultSet.getString("supplier"), resultSet.getFloat("costShipment"), resultSet.getFloat("subtotal"), resultSet.getInt("id"), resultSet.getDate("dateOrder"));
                 List<Product> products = new ArrayList<>();
 
                 PreparedStatement pstatement2 = connection.prepareStatement(query2);
